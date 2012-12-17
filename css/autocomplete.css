@@ -1,102 +1,48 @@
-/*-----------------------------------------------
-.	Coded by:  Nuworks Interactive Labs Inc.	.
-.	Website:   http://www.nuworks.ph/			.
-.	Inquiries: biz@nuworks.ph					.
-------------------------------------------------*/
-#tagContainer {
-	cursor: crosshair;
-	position: absolute;
-	top: 209px;
+
+
+#autoCon {
+  padding:2px;
+  background:#FFF;
+  width:200px;
+  border: 1px solid #333;
 }
-	#autoHolder {
-		padding:2px;
-		background:#FFF;
-		width:200px;
-		border: 1px solid #333;
-	}
-	.auto-content-holder {
-		width: 200px;
-	}
-		.auto-content-input {
-			padding: 2px;
-    		width: 194px;
-			border:1px solid #BDC7D8;
-			font-size:11px;
+  #autoConInput {
+    padding: 2px;
+    width: 194px;
+    border:1px solid #BDC7D8;
+    font-size:11px;
+  }
+  #autoConContent {
+    padding: 0px;
+    margin: 4px 0 0;
+    overflow: hidden;
+    list-style-type: none;
+    z-index:500;
+  }
+    #autoConContent li {
+        border-top:1px solid #fff;
+        border-bottom:1px solid #fff;
+        display:block;
+        height:32px;
+        padding:2px;
+        overflow:hidden;
+      }
+        #autoConContent li img {
+          float:left;
+          width:32px;
+          height:32px;
+        }
+        #autoConContent li span.name {
+          float:left;
+          display:block;
+          font-weight:bold;
+          font-family:Arial, Helvetica, sans-serif;
+          font-size:11px;
+          padding:0 0 0 5px;
+        }
+		#autoConContent li.selected, #autoConContent li.active {
+			background:#6D84B4;
+			border-top:1px solid #3B5998 !important;
+			border-bottom:1px solid #3B5998 !important;
+			color:#fff;
 		}
-		.auto-content-items {
-			padding: 0px;
-			margin: 4px 0 0;
-			overflow: hidden;
-			z-index:500;
-		}
-			.auto-content-items li {
-				border-top:1px solid #fff;
-				border-bottom:1px solid #fff;
-				display:block;
-				height:32px;
-				padding:2px;
-				overflow:hidden;
-			}
-				.auto-content-items li img {
-					float:left;
-					width:32px;
-					height:32px;
-				}
-				.auto-content-items li span.name {
-					float:left;
-					display:block;
-					font-weight:bold;
-					font-family:Arial, Helvetica, sans-serif;
-					font-size:11px;
-					padding:0 0 0 5px;
-				}
-			.auto-content-items li:hover {
-				background:#6D84B4;
-				display:block;
-				height:32px;
-				border-top:1px solid #3B5998;
-				border-bottom:1px solid #3B5998;
-				color:#fff;
-			}
-			.auto-content-item {
-				list-style-type: none;
-			}
-.next-tag-container {
-	text-align:center;
-	position: absolute;
-    text-align: center;
-    top: 710px;
-    width: 100%;
-}
-	.next-tag-container h2 {
-		color:#663e01;
-		font-size:22px;
-		line-height:24px;
-		padding:0 0 5px;
-	}
-	#tagFriendsList {
-		color:#a00309;
-		font-size:12px;
-		font-family:Tahoma, Geneva, sans-serif;
-		padding:0 0 10px;
-		width: 440px;
-		margin:0 auto;
-	}
-	#tagFriendsList a {
-		color:#a00309;
-		font-size:12px;
-		font-family:Tahoma, Geneva, sans-serif;
-		padding:0 0 10px;
-	}
-.selected {
-	background:#6D84B4;
-	border-top:1px solid #3B5998 !important;
-	border-bottom:1px solid #3B5998 !important;
-	color:#fff;
-}
-.active {
-	background:#6D84B4;
-	border-top:1px solid #3B5998 !important;
-	border-bottom:1px solid #3B5998 !important;
-	color:#fff;
-}

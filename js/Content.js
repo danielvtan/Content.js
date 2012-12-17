@@ -3,23 +3,44 @@ if(window.Nu == null)
 Content.prototype = new Nu();
 Content.prototype.constructor = Content;
 function Content(builderID) {
+	this.super();
+	
+	var elem = this.elem;
 	var thisClass = this;
 	var design = "";
 	var list = [];
 	var db = [];
-	var id = (builderID) ? builderID : "list-item";
+	var id = (builderID) ? builderID : "content-item";
+	
 	
 	var currentSelected = 0;
-	var currentHovered = 0;
+	var currentActive = 0;
 	
 	var currentFilter = "";
 	
 	this.selectEnabled = true;
 	
 	this.defaultTarget = this;
+	this.defaultKey = "data";
 	
 	this.maxContent = 999;
 	
+	this.contentTag = "li";
+	this.contentTagCon = "ul";
+	
+	this.setTagType = function(s) {
+		switch(s){
+			case "div":
+				this.contentTag = "div";
+				this.contentTagCon = "div";
+			break;
+			default:
+			break;
+		}
+	}
+	this.setBuilderID = function(i) {
+		id = i;
+	}
 	this.setDB = function(database) {
 		db = database;
 	}
@@ -31,6 +52,12 @@ function Content(builderID) {
 	}
 	this.getList = function() {
 		return list;
+	}
+	this.getCurrentSelected = function() {
+		return currentSelected;
+	}
+	this.getCurrentActive = function() {
+		return currentActive;
 	}
 	this.removeData = function(itemData) {
 		db.splice(itemData.id, 1);
@@ -52,8 +79,10 @@ function Content(builderID) {
 	}
 	this.getContent = function(filter, key) {
 		currentFilter = filter;
+		currentSelected = 0;
+		currentActive = 0;
 		
-		var contents = "<ul id='" + id + "' class='list-items'>";
+		var contents = "<" + this.contentTagCon + " id='" + id + "' class='content-items'>";
 		
 		var dbLength = db.length;
 		var ctr = 0;
@@ -63,17 +92,18 @@ function Content(builderID) {
 					
 			if(currentFilter) {
 				if(!key)
-					key = "data";
+					key = this.defaultKey;
 				var data = String(db[i][key]);
+				
 				var regEx = new RegExp(currentFilter, "i");
 				if(data.search(regEx) >= 0) {
 					list.push(db[i]);
-					contents += "<li id='"+ id + "-" + (list.length -1)  + "' class='list-item  " + id + "'>" + this.buildContent(db[i], this.getDesign()) + "</li>";
+					contents += "<"+ this.contentTag +" id='"+ id + "-" + (list.length -1)  + "' class='content-item  " + id + "'>" + this.buildContent(db[i], this.getDesign()) + "</"+ this.contentTag +">";
 				
 				}
 			}else {
 				list.push(db[i]);
-				contents += "<li id='"+ id + "-" + (list.length -1)  + "' class='list-item  " + id + "'>" + this.buildContent(db[i], this.getDesign()) + "</li>";
+				contents += "<"+ this.contentTag +" id='"+ id + "-" + (list.length -1)  + "' class='content-item  " + id + "'>" + this.buildContent(db[i], this.getDesign()) + "</"+ this.contentTag +">";
 				
 			}
 			
@@ -83,66 +113,94 @@ function Content(builderID) {
 		if(this.selectEnabled && list.length > 0)
 			this.addLiveListener(id + "-" + (list.length - 1), function(){ thisClass.setSelectable(); });
 		
-		return contents += "</ul>";	
+		return contents += "</"+ this.contentTagCon +">";	
 	}
 	this.setSelectable = function() {
 		var listLength = list.length;
 		for(var i = 0; i < listLength; ++i) {
-			var target = document.getElementById(id + "-" + i);
-			target.onclick = function(key) { return function() { thisClass.onItemClick(key); } }(i);
-			target.onmouseover = function(key) { return function() { thisClass.onHoverContent(key); } }(i);
+			var target = elem(id + "-" + i);
+			if(target) {
+				target.onclick = function(key) { return function() { thisClass.onItemClick(key); } }(i);
+				target.onmouseover = function(key) { return function() { thisClass.activeContent(key); } }(i);
+			}
+			
 		}
+	}
+	this.unSetSelectable = function() {
+		this.activeContent = function(){};
+		this.deActivate = function(){};
+		this.selectContent = function(){};
+		this.deSelect = function(){};
 	}
 	this.onItemClick = function(key) {
 		this.selectContent(key);
-		this.onSelectContent();
 	}
 	this.selectContent = function(id) {
+		if(!this.selectEnabled)
+			return;
 		this.deSelect(currentSelected);
 		currentSelected = id;
-		this.selectByID(currentSelected);	
-	}
-	this.onSelectContent = function() {
+		this.selectByID(currentSelected);
+		
+		
 		this.dispatchEvent(ContentEvent.CONTENT_SELECT, list[currentSelected]);
 	}
-	this.selectByID = function(dataID) {
-		var target = document.getElementById(id + "-" + dataID);
-		this.addClass(target, "selected");
-	}
 	this.deSelect = function(dataID) {
-		var prevTarget = document.getElementById(id + "-" + dataID);
-		this.removeClass(prevTarget, "selected")
+		if(!this.selectEnabled)
+			return;
+		var target = elem(id + "-" + dataID);
+		if(target)
+			this.removeClass(target, "selected");
 	}
-	this.onHoverContent = function(id) {
-		this.unHover(currentHovered);
-		currentHovered = id;
-		this.hoverByID(currentHovered);
-		
-		this.dispatchEvent(ContentEvent.CONTENT_OVER, list[currentHovered]);
-	}
-	this.unHover = function(dataID) {
-		var target = document.getElementById(id + "-" + dataID);
-		this.removeClass(target,"active");
-	}
-	this.hoverByID = function(dataID) {
-		var target = document.getElementById(id + "-" + dataID);
-		this.addClass(target, "active");
+	this.selectByID = function(dataID) {
+		var target = elem(id + "-" + dataID);
+		if(target)
+			this.addClass(target, "selected");
 	}
 	
+	
+	this.activeContent = function(id) {
+		if(!this.selectEnabled)
+			return;
+		this.deActivate(currentActive);
+		currentActive = id;
+		this.activeByID(currentActive);
+		
+		this.dispatchEvent(ContentEvent.CONTENT_OVER, list[currentActive]);
+	}
+	this.deActivate = function(dataID) {
+		if(!this.selectEnabled)
+			return;
+		var target = elem(id + "-" + dataID);
+		if(target)
+			this.removeClass(target,"active");
+	}
+	this.activeByID = function(dataID) {
+		var target = elem(id + "-" + dataID);
+		if(target)
+			this.addClass(target, "active");
+	}
+	
+	
 	this.showContent = function() {
-		var content = document.getElementById(id);
-		content.style.display = "block";
+		this.addLiveListener(id, function(){
+				elem(id).style.display = "block";
+				thisClass.dispatchEvent(ContentEvent.CONTENT_SHOW, list);
+			});
+		
 	}
 	this.hideContent = function() {
-		var content = document.getElementById(id);
-		content.style.display = "none";
+		this.addLiveListener(id, function(){
+				elem(id).style.display = "none";
+				thisClass.dispatchEvent(ContentEvent.CONTENT_HIDE, list);
+			});
 	}
 }
 
 var ContentEvent = {
-		CONTENT_SELECT:"CONTENT_SELECT",
-		CONTENT_SHOW:"CONTENT_SHOW",
-		CONTENT_HIDE:"CONTENT_HIDE",
-		CONTENT_OVER:"CONTENT_OVER"
-		};
+	CONTENT_SELECT:"CONTENT_SELECT",
+	CONTENT_SHOW:"CONTENT_SHOW",
+	CONTENT_HIDE:"CONTENT_HIDE",
+	CONTENT_OVER:"CONTENT_OVER"
+	};
 

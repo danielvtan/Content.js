@@ -1,14 +1,17 @@
 
-
 function Nu() {
 	
 	var thisClass = this;
 	this.isIE = (navigator.appName == 'Microsoft Internet Explorer') ? true: false;
 	this.defaultTarget = window;
-	this.listeners = [];
-	
+	this.listeners = {};
 	this.liveListener = [];
+	
 	this.eventInterval;
+	
+	this.super = function() {
+		this.listeners = {};
+	}
 	
 	this.mouse = function(e){
 		var mouse = new Object();
@@ -29,8 +32,7 @@ function Nu() {
 	this.checkLive = function() {
 		for(var i = 0; i < this.liveListener.length; ++i) {
 			var live = this.liveListener[i];
-			console.log(document.getElementById(live.id));
-			if(document.getElementById(live.id)) {
+			if(this.elem(live.id)) {
 				live.func();
 				this.removeLiveListener(live);
 			}
@@ -50,25 +52,32 @@ function Nu() {
 		var regEx = new RegExp(className, "i");
 		target.className = target.className.replace(regEx, "");
 	}
+	this.elem = function(elemID) {
+		return document.getElementById(elemID);
+	}
 	this.keyCode = function(e) {
 		return (e != undefined) ? e.keyCode : window.event.keyCode;
 	}
 	this.dispatchEvent = function(type, e){
 		if(!(this.listeners[type] instanceof Array))
 			return;
-		var listenersCount = this.listeners[type].length
-		for(var i = 0; i < listenersCount; i++)
+		var listenersCount = this.listeners[type].length;
+		for(var i = 0; i < listenersCount; i++) {
+			console.log(type);
 			this.listeners[type][i](e);
+		}
 	}
 	this.addListener = function(type, listener, target){
 		if(!(this.listeners[type] instanceof Array))
 			this.listeners[type] = [];
 		this.listeners[type].push(listener);
+		/*
 		var t = (target != null) ? target : this.defaultTarget;
+		
 		t[type] = function(e){
-			this.dispatchEvent(type, e);
+			t.dispatchEvent(type, e);
 			};
-			
+		*/
 	}
 	this.removeListener = function(type, listener, target){
 		var index = this.listeners[type].indexOf(listener);

@@ -4,157 +4,100 @@
 <head>
     <title>Test Page</title>
     
+    <link rel="stylesheet" type="text/css" href="css/content.css">
     <link rel="stylesheet" type="text/css" href="css/autocomplete.css">
-        <link rel="stylesheet" type="text/css" href="css/content.css">
+    <script type="text/javascript" src="js/Nu.js"></script>
+    <script type="text/javascript" src="js/Content.js"></script>
+    <script type="text/javascript" src="js/AutoComplete.js"></script>
 </head>
 <body>
-<div id="content"></div>
-<div id="tagContainer"></div>
-<div id="tagFriendsList"></div>
-<br>
-<br>
-<br>
-<br>
-
-<div id="container">
-    <input id="inputTest" type="text" autocomplete="off">
-    <div id="contentBuilder"></div>
+    <p>
+        AutoComplete is a sample extension/implementation of the Content Class
+        takes advantage of the content queries and filters the setDesign and event driven function
+        the AutoComplete Class creates the inputbox on its own
+        ready to be styled using css
+    </p>
+<div id="autoCon">
 </div>
-<script type="text/javascript" src="js/Nu.js"></script>
-<script type="text/javascript" src="js/AutoComplete.js"></script>
-<script type="text/javascript" src="js/Content.js"></script>
 <script type="text/javascript">
-
-    var friendDB = [{ fbid:4, data:"test"},
+    /*
+     * Object Database
+     */
+    
+    var friendDB = [{ fbid:4, data:"adsdsds"},
                 { fbid:5, data:"asd"},
                 { fbid:6, data:"sdasd"},
                 { fbid:7, data:"teasfasdfst"},
                 { fbid:8, data:"asdf"},
                 { fbid:9, data:"teadsfasfst"}];
+</script>
+<script type="text/javascript">
     
+    /*
+     * AutoComplete is a sample extension/implementation of the Content Class
+     * takes advantage of the content queries and filters the setDesign and event driven function
+     * the AutoComplete Class creates the inputbox on its own
+     * ready to be styled using css
+     */
     
-    var content = new Content("friend-list");
-    content.setDesign('<img onclick="onClick(${this})" src="https://graph.facebook.com/${fbid}/picture?type=square" /> <span class="name">${data}</span>');
-    content.setDB(friendDB);
-    //content.maxContent = 2;
-    content.addListener(ContentEvent.CONTENT_SELECT, onContentSelect);
-    content.addListener(ContentEvent.CONTENT_OVER, onContentOver);
-    
-    //content.selectEnabled = false;
-    var html = content.getContent();
-    
-    setTimeout(function() {
-        document.getElementById("contentBuilder").innerHTML = html;
-        }, 2000);
-    function onClick(e) {
-        console.log(e.data);
+    var auto = new AutoComplete("autoCon");
+    auto.setDesign('<img onclick="onAutoClick(${this})" src="https://graph.facebook.com/${fbid}/picture?type=square" /> <span class="name">${data}</span>');
+    auto.setDB(friendDB);
+    //auto.maxContent = 5;
+    auto.addListener(ContentEvent.CONTENT_SELECT, onAutoSelect);
+    //auto.addListener(ContentEvent.CONTENT_OVER, onAutoOver);
+    //auto.selectEnabled = false;
+    auto.getInput().placeholder = "Type your friends name";
+    //auto.show();
+    function onAutoClick(e) {
+        //auto.getInput().value = e.data;
+       //auto.hideContent();
     }
     
+    function onAutoSelect(e) {
+        alert("onAutoSelect");
+        auto.getInput().value = e.data;
+        auto.hideContent();
+    }
+    function onAutoOver(e) {
+       // alert(e.id);
+    }
     
+    console.log("auto " + auto.listeners);
+</script>
+<div id="fbidHolder">
+    
+</div>
+<br>
+<div id="dataHolder">
+    
+</div>
+<br>
+<div id="contentCon">
+    
+</div>
+
+<script type="text/javascript">
+    
+    
+    var content = new Content("content");
+    content.setDesign('<img onclick="onContentClick(${this})" src="https://graph.facebook.com/${fbid}/picture?type=square" /> <span class="name">${data}</span>');
+    content.setDB(friendDB);
+    content.addListener(ContentEvent.CONTENT_SELECT, onContentSelect);
+    content.addListener(ContentEvent.CONTENT_OVER, onContentOver);
+    //auto.selectEnabled = false;
+    content.elem("contentCon").innerHTML = content.getContent();
+    function onContentClick(e) {
+       //content.hideContent();
+    }
     function onContentSelect(e) {
-        alert(e.id);
+        alert("onContentSelect");
+        content.elem("fbidHolder").innerHTML = e.fbid;
+        content.elem("dataHolder").innerHTML = e.data;
     }
     function onContentOver(e) {
         //alert(e.id);
     }
-    
-    var inputTest = document.getElementById("inputTest");
-    inputTest.onkeyup = function(e) {
-        var code = content.keyCode(e);
-        switch(code){
-                case 40:
-                        // arrow down
-                       // thisClass.changeSelection(+1);
-                break;
-                case 38:
-                        // arrow up
-                       // thisClass.changeSelection(-1);
-                break;
-                case 13:
-                        // enter key
-                      //  thisClass.selectContent();
-                break;
-                default:
-                        // nay other key
-                        document.getElementById("contentBuilder").innerHTML = content.getContent(inputTest.value);
-                break;
-        }
-    }
 </script>
-<script type="text/javascript">
-    
-    
-    var friends = [];
-    var names = [];
-    var items = [];
-    
-    var clickEnabled = true;
-    var ac = new AutoComplete(document.getElementById("content"));
-    ac.setDB(friendDB);
-    ac.maxContent(10);
-    ac.itemDesign('<img src="https://graph.facebook.com/${fbid}/picture?type=square" /> <span class="name">${data}</span>');
-    ac.setFocus();
-    //ac.showList();
-    ac.show(300, 100);
-    
-    ac.addListener(ac.events.ITEM_SELECT, function(e){
-            setTimeout(function(){ saveFriendData(e); ac.clear(); ac.hideList(); }, 100);
-    }, ac);
-    ac.getInput().placeholder = "Type your friends name";
-    ac.getInput().onclick = function(e){ 
-            if (!e) {
-                var e = window.event;
-            }
-            e.cancelBubble = true;
-            if (e.stopPropagation) e.stopPropagation();
-    }
-    document.getElementById("tagContainer").onclick = showInput;
-    document.getElementById("tagFriendsList").innerHTML = "With ";
-    function showInput(e) {
-        /*
-            var mouse = ac.mouse(e);
-            //var wrapperWidth = document.getElementById("wrapper").clientWidth;
-            var offsetX = ac.isIE ? 0: (document.body.clientWidth - wrapperWidth)/2;
-            var offsetY = 212;
-            
-            var inputWidth = ac.getInput().clientWidth;
-            if(mouse.x + inputWidth > wrapperWidth + offsetX)
-                    ac.show(wrapperWidth - inputWidth, mouse.y - offsetY);
-            else
-                    ac.show(mouse.x - offsetX, mouse.y - offsetY);
-                    
-                    */
-    }
-    function saveFriendData(e) {
-            document.getElementById("tagFriendsList").innerHTML += addTags(e);
-            if(friends.length >= 10) {
-                    //document.getElementById("tagContainer").onclick = null;
-                    ac.hide();
-            }
-    }
-    function addTags(e) {
-            ac.removeItem(e);
-            items.push(e);
-            friends.push(e.fbid);
-            names.push(e.data);
-            
-            return '<span id="tag' + e.fbid + '"><a href="http://www.facebook.com/' + e.fbid + '" >' + e.data  + '</a><a href="#" id="' + e.fbid + '" onclick="removeTag(this)"> x </a></span>';
-    }
-    function removeTag(e) {
-        document.getElementById("tagFriendsList").removeChild(document.getElementById("tag" + e.id));
-        
-        for(var i = 0; i < items.length; ++i) {
-                if(items[i].fbid == e.id){
-                        ac.addItem(items[i]);	
-                        items.splice(i, 1);
-                        friends.splice(i, 1);
-                        names.splice(i, 1);
-                        break;
-                }
-        }
-    }
-</script>
-
-
 </body>
 </html>
