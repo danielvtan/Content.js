@@ -7,7 +7,6 @@ function AutoComplete(containerID) {
 	var elem = this.elem;
 	var thisClass = this;
 	
-	this.defaultTarget = this;
 	var con = elem(containerID);
 	con.innerHTML = '<input id="'+ containerID + 'Input" type="text" autocomplete="off"><div id="' + containerID + 'ContentCon"></div>';
 	

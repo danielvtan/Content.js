@@ -9,7 +9,7 @@ function Nu() {
 	
 	this.eventInterval;
 	
-	this.super = function() {
+	this.init = function() {
 		this.listeners = {};
 	}
 	
@@ -63,7 +63,6 @@ function Nu() {
 			return;
 		var listenersCount = this.listeners[type].length;
 		for(var i = 0; i < listenersCount; i++) {
-			console.log(type);
 			this.listeners[type][i](e);
 		}
 	}

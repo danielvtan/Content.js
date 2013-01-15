@@ -3,7 +3,7 @@ if(window.Nu == null)
 Content.prototype = new Nu();
 Content.prototype.constructor = Content;
 function Content(builderID) {
-	this.super();
+	this.init();
 	
 	var elem = this.elem;
 	var thisClass = this;
@@ -28,6 +28,7 @@ function Content(builderID) {
 	this.contentTag = "li";
 	this.contentTagCon = "ul";
 	
+	
 	this.setTagType = function(s) {
 		switch(s){
 			case "div":
@@ -41,6 +42,9 @@ function Content(builderID) {
 	this.setBuilderID = function(i) {
 		id = i;
 	}
+	this.getBuilderID = function() {
+		return id;
+	}
 	this.setDB = function(database) {
 		db = database;
 	}
@@ -52,6 +56,9 @@ function Content(builderID) {
 	}
 	this.getList = function() {
 		return list;
+	}
+	this.getCurrentData = function() {
+		return this.getList()[this.getCurrentSelected()];
 	}
 	this.getCurrentSelected = function() {
 		return currentSelected;
@@ -121,33 +128,25 @@ function Content(builderID) {
 			var target = elem(id + "-" + i);
 			if(target) {
 				target.onclick = function(key) { return function() { thisClass.onItemClick(key); } }(i);
-				target.onmouseover = function(key) { return function() { thisClass.activeContent(key); } }(i);
+				target.onmouseover = function(key) { return function() { thisClass.onItemOver(key); } }(i);
+				target.onmouseout = function(key) { return function() { thisClass.onItemOut(key); } }(i);
 			}
 			
 		}
 	}
-	this.unSetSelectable = function() {
-		this.activeContent = function(){};
-		this.deActivate = function(){};
-		this.selectContent = function(){};
-		this.deSelect = function(){};
-	}
 	this.onItemClick = function(key) {
 		this.selectContent(key);
+		this.dispatchEvent(ContentEvent.CONTENT_SELECT, list[currentSelected]);
 	}
 	this.selectContent = function(id) {
-		if(!this.selectEnabled)
-			return;
 		this.deSelect(currentSelected);
 		currentSelected = id;
 		this.selectByID(currentSelected);
 		
 		
-		this.dispatchEvent(ContentEvent.CONTENT_SELECT, list[currentSelected]);
+		
 	}
 	this.deSelect = function(dataID) {
-		if(!this.selectEnabled)
-			return;
 		var target = elem(id + "-" + dataID);
 		if(target)
 			this.removeClass(target, "selected");
@@ -158,19 +157,22 @@ function Content(builderID) {
 			this.addClass(target, "selected");
 	}
 	
+	this.onItemOut = function(key) {
+		this.deActivate(key);
+		currentActive = 0;
+		this.dispatchEvent(ContentEvent.CONTENT_OUT, list[currentActive]);
+	}
 	
+	this.onItemOver = function(key) {
+		this.activeContent(key);
+		this.dispatchEvent(ContentEvent.CONTENT_OVER, list[currentActive]);
+	}
 	this.activeContent = function(id) {
-		if(!this.selectEnabled)
-			return;
 		this.deActivate(currentActive);
 		currentActive = id;
 		this.activeByID(currentActive);
-		
-		this.dispatchEvent(ContentEvent.CONTENT_OVER, list[currentActive]);
 	}
 	this.deActivate = function(dataID) {
-		if(!this.selectEnabled)
-			return;
 		var target = elem(id + "-" + dataID);
 		if(target)
 			this.removeClass(target,"active");
@@ -201,6 +203,7 @@ var ContentEvent = {
 	CONTENT_SELECT:"CONTENT_SELECT",
 	CONTENT_SHOW:"CONTENT_SHOW",
 	CONTENT_HIDE:"CONTENT_HIDE",
-	CONTENT_OVER:"CONTENT_OVER"
+	CONTENT_OVER:"CONTENT_OVER",
+	CONTENT_OUT:"CONTENT_OUT"
 	};
 
