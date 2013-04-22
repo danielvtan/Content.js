@@ -1,48 +1,19 @@
 
 
-#container {
-  padding:2px;
+#contentCon {
+  padding:10px;
   background:#FFF;
   width:200px;
   border: 1px solid #333;
 }
-  #inputTest {
-    padding: 2px;
-    width: 194px;
-    border:1px solid #BDC7D8;
-    font-size:11px;
-  }
-  #friend-list {
+  #content {
     padding: 0px;
     margin: 4px 0 0;
     overflow: hidden;
     list-style-type: none;
     z-index:500;
   }
-    #friend-list li {
-        border-top:1px solid #fff;
-        border-bottom:1px solid #fff;
-        display:block;
-        height:32px;
-        padding:2px;
-        overflow:hidden;
-      }
-        #friend-list li img {
-          float:left;
-          width:32px;
-          height:32px;
-        }
-        #friend-list li span.name {
-          float:left;
-          display:block;
-          font-weight:bold;
-          font-family:Arial, Helvetica, sans-serif;
-          font-size:11px;
-          padding:0 0 0 5px;
-        }
 .selected, .active {
 	background:#6D84B4;
-	border-top:1px solid #3B5998 !important;
-	border-bottom:1px solid #3B5998 !important;
 	color:#fff;
 }

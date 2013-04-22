@@ -4,67 +4,24 @@
 <head>
     <title>Test Page</title>
     
+    <link rel="stylesheet" href="css/slideshow.css" >
     <link rel="stylesheet" type="text/css" href="css/content.css">
     <link rel="stylesheet" type="text/css" href="css/autocomplete.css">
+    
+    <script type="text/javascript" src="js/Animate.js"></script>
+    <script type="text/javascript" src="js/Dom.js"></script>
     <script type="text/javascript" src="js/Nu.js"></script>
     <script type="text/javascript" src="js/Content.js"></script>
     <script type="text/javascript" src="js/AutoComplete.js"></script>
+    <script type="text/javascript" src="js/Slide.js" ></script>
 </head>
 <body>
-    <p>
-        AutoComplete is a sample extension/implementation of the Content Class
-        takes advantage of the content queries and filters the setDesign and event driven function
-        the AutoComplete Class creates the inputbox on its own
-        ready to be styled using css
-    </p>
-<div id="autoCon">
+<p>
+    Simple output of the Content class
+</p>
+<div id="contentCon">
+    
 </div>
-<script type="text/javascript">
-    /*
-     * Object Database
-     */
-    
-    var friendDB = [{ fbid:4, data:"adsdsds"},
-                { fbid:5, data:"asd"},
-                { fbid:6, data:"sdasd"},
-                { fbid:7, data:"teasfasdfst"},
-                { fbid:8, data:"asdf"},
-                { fbid:9, data:"teadsfasfst"}];
-</script>
-<script type="text/javascript">
-    
-    /*
-     * AutoComplete is a sample extension/implementation of the Content Class
-     * takes advantage of the content queries and filters the setDesign and event driven function
-     * the AutoComplete Class creates the inputbox on its own
-     * ready to be styled using css
-     */
-    
-    var auto = new AutoComplete("autoCon");
-    auto.setDesign('<img onclick="onAutoClick(${this})" src="https://graph.facebook.com/${fbid}/picture?type=square" /> <span class="name">${data}</span>');
-    auto.setDB(friendDB);
-    //auto.maxContent = 5;
-    auto.addListener(ContentEvent.CONTENT_SELECT, onAutoSelect);
-    //auto.addListener(ContentEvent.CONTENT_OVER, onAutoOver);
-    //auto.selectEnabled = false;
-    auto.getInput().placeholder = "Type your friends name";
-    //auto.show();
-    function onAutoClick(e) {
-        //auto.getInput().value = e.data;
-       //auto.hideContent();
-    }
-    
-    function onAutoSelect(e) {
-        alert("onAutoSelect");
-        auto.getInput().value = e.data;
-        auto.hideContent();
-    }
-    function onAutoOver(e) {
-       // alert(e.id);
-    }
-    
-    console.log("auto " + auto.listeners);
-</script>
 <div id="fbidHolder">
     
 </div>
@@ -72,31 +29,83 @@
 <div id="dataHolder">
     
 </div>
-<br>
-<div id="contentCon">
+<script type="text/javascript">
+    /*
+     * Object Database
+     */
     
-</div>
-
+    var friendDB = [{ image:"images/1.jpg", data:"adsdsds"},
+                { image:"images/2.jpg", data:"asd"},
+                { image:"images/3.jpg", data:"sdasd"},
+                { image:"images/4.jpg", data:"teasfasdfst"},
+                { image:"images/1.gif", data:"asdf"}];
+    
+</script>
 <script type="text/javascript">
     
-    
     var content = new Content("content");
-    content.setDesign('<img onclick="onContentClick(${this})" src="https://graph.facebook.com/${fbid}/picture?type=square" /> <span class="name">${data}</span>');
+    content.setDesign('<img onclick="onContentClick(${this})" src="${image}" /> <span class="name">${data}</span>');
     content.setDB(friendDB);
     content.addListener(ContentEvent.CONTENT_SELECT, onContentSelect);
-    content.addListener(ContentEvent.CONTENT_OVER, onContentOver);
     //auto.selectEnabled = false;
-    content.elem("contentCon").innerHTML = content.getContent();
+    Dom.el("contentCon").innerHTML = content.getContent();
     function onContentClick(e) {
        //content.hideContent();
     }
     function onContentSelect(e) {
         alert("onContentSelect");
-        content.elem("fbidHolder").innerHTML = e.fbid;
-        content.elem("dataHolder").innerHTML = e.data;
+        Dom.el("fbidHolder").innerHTML = e.image;
+        Dom.el("dataHolder").innerHTML = e.data;
     }
-    function onContentOver(e) {
-        //alert(e.id);
+</script>
+    
+<p>
+    Slide is a simple implementation of Content class. Using 2 content class, 1 as the image slides and another as thumblist.
+    It also uses the Animate class for image animation
+</p>
+<div id="slideCon">
+</div>
+<script type="text/javascript">
+     var sliderData = [{image:"images/image1.jpg" },
+                  {image:"images/image2.jpg" },
+                  {image:"images/image3.jpg" },
+                  {image:"images/image4.jpg" },
+                  {image:"images/image5.jpg" }
+                  ]
+     Nu.addListener(NuEvent.LOAD, function() {
+            Slide("slideCon", sliderData, 450);
+        }, window)
+</script>
+
+    
+<p>
+    AutoComplete is a sample extension/implementation of the Content Class
+    takes advantage of the content queries and filters the setDesign and event driven function
+    the AutoComplete Class creates the inputbox on its own
+    ready to be styled using css
+</p>
+<div id="autoCon">
+</div>
+<script type="text/javascript">
+    var auto = new AutoComplete("autoCon");
+    auto.setDesign('<img onclick="onAutoClick(${this})" src="${image}" /> <span class="name">${data}</span>');
+    auto.setDB(friendDB);
+    //auto.maxContent = 5;
+    auto.addListener(ContentEvent.CONTENT_SELECT, onAutoSelect);
+    auto.addListener(ContentEvent.CONTENT_OVER, onAutoOver);
+    //auto.selectEnabled = false;
+    auto.getInput().placeholder = "Type your friends name";
+    //auto.show();
+    function onAutoOver(e) {
+        //alert("");
+        auto.getInput().value = e.data;
+       //auto.hideContent();
+    }
+    function onAutoSelect(e) {
+        auto.getInput().value = e.data;
+        setTimeout(function() {
+            auto.hideContent();
+        }, 10);
     }
 </script>
 </body>

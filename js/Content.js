@@ -1,11 +1,12 @@
+if(window.Dom == null)
+	throw "Content requires Dom.js";
 if(window.Nu == null)
 	throw "Content Class requires Nu.js";
-Content.prototype = new Nu();
+Content.prototype = Nu;
 Content.prototype.constructor = Content;
 function Content(builderID) {
 	this.init();
 	
-	var elem = this.elem;
 	var thisClass = this;
 	var design = "";
 	var list = [];
@@ -125,7 +126,7 @@ function Content(builderID) {
 	this.setSelectable = function() {
 		var listLength = list.length;
 		for(var i = 0; i < listLength; ++i) {
-			var target = elem(id + "-" + i);
+			var target = Dom.el(id + "-" + i);
 			if(target) {
 				target.onclick = function(key) { return function() { thisClass.onItemClick(key); } }(i);
 				target.onmouseover = function(key) { return function() { thisClass.onItemOver(key); } }(i);
@@ -142,19 +143,16 @@ function Content(builderID) {
 		this.deSelect(currentSelected);
 		currentSelected = id;
 		this.selectByID(currentSelected);
-		
-		
-		
 	}
 	this.deSelect = function(dataID) {
-		var target = elem(id + "-" + dataID);
+		var target = Dom.el(id + "-" + dataID);
 		if(target)
-			this.removeClass(target, "selected");
+			Dom.removeClass(target, "selected");
 	}
 	this.selectByID = function(dataID) {
-		var target = elem(id + "-" + dataID);
+		var target = Dom.el(id + "-" + dataID);
 		if(target)
-			this.addClass(target, "selected");
+			Dom.addClass(target, "selected");
 	}
 	
 	this.onItemOut = function(key) {
@@ -173,27 +171,25 @@ function Content(builderID) {
 		this.activeByID(currentActive);
 	}
 	this.deActivate = function(dataID) {
-		var target = elem(id + "-" + dataID);
+		var target = Dom.el(id + "-" + dataID);
 		if(target)
-			this.removeClass(target,"active");
+			Dom.removeClass(target,"active");
 	}
 	this.activeByID = function(dataID) {
-		var target = elem(id + "-" + dataID);
+		var target = Dom.el(id + "-" + dataID);
 		if(target)
-			this.addClass(target, "active");
+			Dom.addClass(target, "active");
 	}
-	
-	
 	this.showContent = function() {
 		this.addLiveListener(id, function(){
-				elem(id).style.display = "block";
+				Dom.el(id).style.display = "block";
 				thisClass.dispatchEvent(ContentEvent.CONTENT_SHOW, list);
 			});
 		
 	}
 	this.hideContent = function() {
 		this.addLiveListener(id, function(){
-				elem(id).style.display = "none";
+				Dom.el(id).style.display = "none";
 				thisClass.dispatchEvent(ContentEvent.CONTENT_HIDE, list);
 			});
 	}

@@ -1,4 +1,4 @@
-
+window.Nu = new Nu();
 function Nu() {
 	
 	var thisClass = this;
@@ -6,13 +6,12 @@ function Nu() {
 	this.defaultTarget = window;
 	this.listeners = {};
 	this.liveListener = [];
-	
+    
 	this.eventInterval;
 	
 	this.init = function() {
 		this.listeners = {};
 	}
-	
 	this.mouse = function(e){
 		var mouse = new Object();
 		if (!this.isIE) {
@@ -32,7 +31,7 @@ function Nu() {
 	this.checkLive = function() {
 		for(var i = 0; i < this.liveListener.length; ++i) {
 			var live = this.liveListener[i];
-			if(this.elem(live.id)) {
+			if(Dom.el(live.id)) {
 				live.func();
 				this.removeLiveListener(live);
 			}
@@ -44,39 +43,24 @@ function Nu() {
 		if(this.liveListener.length <= 0)
 			clearInterval(this.eventInterval);
 	}
-	this.addClass = function(target, className) {
-		target.setAttribute("class", target.className + " " + className);
-		target.setAttribute("className", target.className + " " + className);
-	}
-	this.removeClass = function(target, className) {
-		var regEx = new RegExp(className, "i");
-		target.className = target.className.replace(regEx, "");
-	}
-	this.elem = function(elemID) {
-		return document.getElementById(elemID);
-	}
 	this.keyCode = function(e) {
 		return (e != undefined) ? e.keyCode : window.event.keyCode;
 	}
 	this.dispatchEvent = function(type, e){
-		if(!(this.listeners[type] instanceof Array))
-			return;
-		var listenersCount = this.listeners[type].length;
-		for(var i = 0; i < listenersCount; i++) {
-			this.listeners[type][i](e);
-		}
+		if(this.listeners[type] == undefined)
+            return;
+		this.listeners[type](e);
 	}
 	this.addListener = function(type, listener, target){
-		if(!(this.listeners[type] instanceof Array))
-			this.listeners[type] = [];
-		this.listeners[type].push(listener);
-		/*
+		this.listeners[type] = listener;
+			
 		var t = (target != null) ? target : this.defaultTarget;
-		
 		t[type] = function(e){
-			t.dispatchEvent(type, e);
-			};
-		*/
+            if(t != thisClass.defaultTarget)
+                t.dispatchEvent(type, e);
+            else
+                thisClass.dispatchEvent(type, e);
+		};
 	}
 	this.removeListener = function(type, listener, target){
 		var index = this.listeners[type].indexOf(listener);
@@ -107,6 +91,13 @@ function Nu() {
 	}
 	
 }
+var NuEvent = {
+            LOAD:"onload"
+
+            };
+
+
+
 // if Array.prototype.indexOf is not supported
 if (!Array.prototype.indexOf) {
 	Array.prototype.indexOf=function(o,i){for(var j=this.length,i=i<0?i+j<0?0:i+j:i||0;i<j&&this[i]!==o;i++);return j<=i?-1:i}
