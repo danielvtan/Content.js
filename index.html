@@ -72,9 +72,12 @@
                   {image:"images/image4.jpg" },
                   {image:"images/image5.jpg" }
                   ]
-     Nu.addListener(NuEvent.LOAD, function() {
-            Slide("slideCon", sliderData, 450);
-        }, window)
+     window.onload = function() {
+         Slide("slideCon", sliderData, 450);
+     }
+    // Nu.addListener(NuEvent.LOAD, function() {
+           
+     //   }, window)
 </script>
 
     
@@ -86,6 +89,22 @@
 </p>
 <div id="autoCon">
 </div>
+<br>
+<br>
+<br>
+<br>    
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>    
+<br>
+<br>
+<br>
+<br>
 <script type="text/javascript">
     var auto = new AutoComplete("autoCon");
     auto.setDesign('<img onclick="onAutoClick(${this})" src="${image}" /> <span class="name">${data}</span>');

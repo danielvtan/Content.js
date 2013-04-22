@@ -60,7 +60,7 @@ function Dom() {
                 Css.apply(d, css);
                 return searchID(key);
             },
-            setAttrib:function(key, val) {
+            set:function(key, val) {
                 d[key] = val;
                 return searchID(key);
             }
@@ -93,7 +93,7 @@ function Dom() {
                     }
                     return searchClass(id);
                 },
-                setAttrib:function(key, val) {
+                set:function(key, val) {
                     for(var i = 0; i < list.length; ++i) {
                         list[i][key] = val;
                     }

@@ -1,4 +1,4 @@
-window.Nu = new Nu();
+
 function Nu() {
 	
 	var thisClass = this;
@@ -8,18 +8,39 @@ function Nu() {
 	this.liveListener = [];
     
 	this.eventInterval;
-	
-	this.init = function() {
-		this.listeners = {};
-	}
+    
+    this.init = function() {
+        this.listeners = {};
+    }
+    
 	this.mouse = function(e){
 		var mouse = new Object();
-		if (!this.isIE) {
+		
+		if(e){
+			if(e.custom){
+				mouse.x = e.x;
+				mouse.y = e.y;
+				return mouse;
+			}else if (e.changedTouches) { 	// iPhone
+				mouse.x = e.changedTouches[0].clientX;
+				mouse.y = e.changedTouches[0].clientY;
+				//e.preventDefault();
+				return mouse;
+			}else if (e.clientX) { 	// all others
+				mouse.x = e.clientX;
+				mouse.y = e.clientY;
+				//e.preventDefault();
+				return mouse;
+			}
+		}
+		if (!thisClass.isIE) {
 			mouse.x = e.pageX;
 			mouse.y = e.pageY;
+			//e.preventDefault();
 		}else{
 			mouse.x = event.x;
 			mouse.y = event.y;
+			//event.returnValue = false;
 		}
 		return mouse;
 	}

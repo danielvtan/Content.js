@@ -1,10 +1,12 @@
 if(window.Content == null)
 	throw "AutoComplete requires Content.js";
-AutoComplete.prototype = new Content();
+AutoComplete.prototype = Content;
 AutoComplete.prototype.constructor = AutoComplete;
 function AutoComplete(containerID) {
+    Content.apply(this, arguments);
+    
 	var thisClass = this;
-	
+   
 	var con = Dom.el(containerID);
 	con.innerHTML = '<input id="'+ containerID + 'Input" type="text" autocomplete="off"><div id="' + containerID + 'ContentCon"></div>';
 	

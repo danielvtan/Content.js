@@ -5,9 +5,10 @@ if(window.Nu == null)
 Content.prototype = Nu;
 Content.prototype.constructor = Content;
 function Content(builderID) {
-	this.init();
-	
+    Nu.apply(this, arguments)
+    
 	var thisClass = this;
+    
 	var design = "";
 	var list = [];
 	var db = [];
