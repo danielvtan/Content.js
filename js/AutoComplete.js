@@ -33,7 +33,7 @@ function AutoComplete(containerID) {
 		};
     
     autoInput.onkeydown = function(e) {
-         switch(code) {
+         switch(e) {
 		    case 13:
                 thisClass.selectContent(thisClass.getCurrentActive());
                 thisClass.dispatchEvent(ContentEvent.CONTENT_SELECT, thisClass.getList()[thisClass.getCurrentActive()])
