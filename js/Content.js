@@ -1,11 +1,20 @@
+var ContentEvent = {
+	CONTENT_SELECT:"CONTENT_SELECT",
+	CONTENT_SHOW:"CONTENT_SHOW",
+	CONTENT_HIDE:"CONTENT_HIDE",
+	CONTENT_OVER:"CONTENT_OVER",
+	CONTENT_OUT:"CONTENT_OUT"
+	};
+
+
 if(window.Dom == null)
 	throw "Content requires Dom.js";
-if(window.Nu == null)
-	throw "Content Class requires Nu.js";
-Content.prototype = Nu;
+if(window.EventDispatcher == null)
+	throw "Content Class requires EventDispatcher.js";
+Content.prototype = EventDispatcher;
 Content.prototype.constructor = Content;
 function Content(builderID) {
-    Nu.apply(this, arguments)
+    EventDispatcher.apply(this, arguments)
     
 	var thisClass = this;
     
@@ -196,11 +205,4 @@ function Content(builderID) {
 	}
 }
 
-var ContentEvent = {
-	CONTENT_SELECT:"CONTENT_SELECT",
-	CONTENT_SHOW:"CONTENT_SHOW",
-	CONTENT_HIDE:"CONTENT_HIDE",
-	CONTENT_OVER:"CONTENT_OVER",
-	CONTENT_OUT:"CONTENT_OUT"
-	};
 

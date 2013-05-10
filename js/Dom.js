@@ -6,18 +6,18 @@ function Stat() {
     else
         ti = new Date();
     if(ti && te) {
-        console.log(te-ti);
+        //console.log(te-ti);
         te = ti = null;
     }
 }
 
 function Dom() {
-    var dom = document;
+    var doc = document;
     this.type = {
         DIV:"div"
     };
     this.create = function(type, id) {
-        var e = document.createElement(type);
+        var e = doc.createElement(type);
         if(id)
                 e.id = id;
         return e;
@@ -32,17 +32,36 @@ function Dom() {
     }
     this.el = function(id) {
         var d;
-        var key = id.substring(0, 1);
-        var actualID;
-        if(key == "#") {
-            actualID = id.substring(1, id.length);
-            d = searchID(actualID);
-        } else if(key == ".") {
-            actualID = id.substring(1, id.length);
-            d = searchClass(actualID);
-        } else {
-            d = dom.getElementById(id);
+        var ids = id.split(" ");
+        var loopCount = 0;
+        var loopMax = ids.length;
+        function loopSearch(splitID, parents) {
+            var key = splitID.substring(0, 1);
+            var actualID;
+            switch(key) {
+                case "#":
+                    actualID = splitID.substring(1, id.length);
+                    d = searchID(actualID);
+                break;
+                case ".":
+                    actualID = splitID.substring(1, id.length);
+                    d = searchClass(actualID, parents);
+                break;
+                default:
+                    d = doc.getElementById(splitID);
+                    if(d == undefined) {
+                        d = searchTag(splitID, parents);
+                    }
+                    
+                    
+                break;
+            }
+            if(loopCount < loopMax - 1) {
+                loopCount++;
+                loopSearch(ids[loopCount], d._dom());
+            }
         }
+        loopSearch(ids[0]);
         return d;
     }
     this.addClass = function(target, className) {
@@ -50,57 +69,137 @@ function Dom() {
 		target.setAttribute("className", target.className + " " + className);
 	}
 	this.removeClass = function(target, className) {
+        
 		var regEx = new RegExp(className, "i");
 		target.className = target.className.replace(regEx, "");
 	}
-    function searchID(key) {
-        var d = dom.getElementById(key);
-        return {
+    function searchID(id, parent) {
+        parent = (parent == undefined) ? doc : parent;
+        var d = parent.getElementById(id);
+        
+        var data = {
+            _dom:function() {
+                return d;
+            },
             css:function(css) {
                 Css.apply(d, css);
                 return searchID(key);
             },
             set:function(key, val) {
-                d[key] = val;
+                if(typeof val == "function") {
+                    d[key] = function() {
+                        val.call(data);
+                    };
+                } else {
+                    d[key] = val;
+                }
+                
                 return searchID(key);
+            },
+            animate:function(duration, to, delta) {
+                Animate.to(d, duration, to, delta);
+                
             }
         };
+        return data;
     }
-    function searchClass(id) {
-            Stat();
-            var list = [];
-            function loopSearch(dom, id) {
-                for(var i = 0; i < dom.childNodes.length; ++i) {
-                    var child = dom.childNodes[i];
-                    if(child.nodeName == "#text")
-                        continue;
-                    if(child.className.indexOf(id) > -1) {
-                        // found
-                        list.push(child);
-                    } else {
-                        if(child.childNodes.length > 0) {
-                            loopSearch(child, id);
-                        }
+    function searchClass(id, parents) {
+        parents = (parents == undefined) ? [doc.body] : parents;
+        Stat();
+        var list = [];
+        function loopSearch(dom, id) {
+            for(var i = 0; i < dom.childNodes.length; ++i) {
+                var child = dom.childNodes[i];
+                if(child.nodeName == "#text")
+                    continue;
+                
+                if(child.className.split(" ").indexOf(id) > -1) {
+                    // found
+                    list.push(child);
+                } else {
+                    if(child.childNodes.length > 0) {
+                        loopSearch(child, id);
                     }
                 }
             }
-            loopSearch(document.body, id)
-            Stat();
-            return {
-                css:function(css) {
-                    for(var i = 0; i < list.length; ++i) {
-                        Css.apply(list[i], css);
-                    }
-                    return searchClass(id);
-                },
-                set:function(key, val) {
-                    for(var i = 0; i < list.length; ++i) {
+        }
+        for(var i = 0; i < parents.length; ++i) {
+            loopSearch(parents[i], id)
+        }
+        Stat();
+        
+        var data = {
+            _dom:function() {
+                return list;
+            },
+            css:function(css) {
+                for(var i = 0; i < list.length; ++i) {
+                    Css.apply(list[i], css);
+                }
+                return searchClass(id);
+            },
+            set:function(key, val) {
+                for(var i = 0; i < list.length; ++i) {
+                    if(typeof val == "function") {
+                         list[i][key] = function() {
+                            val.call(data);
+                         };
+                    } else {
                         list[i][key] = val;
                     }
-                    return searchClass(id);
                 }
-            };
+                return searchClass(id);
+            },
+            animate:function(duration, to, delta) {
+                for(var i = 0; i < list.length; ++i) {
+                    Animate.to(list[i], duration, to, delta);
+                }
+                
+            }
+        };
+        return data;
+    }
+    function searchTag(tag, parents) {
+        parents = (parents == undefined) ? [doc.body] : parents;
+        var list = [];
+        for(var i = 0; i < parents.length; ++i) {
+            var tagList = parents[i].getElementsByTagName(tag);
+            for(var j = 0; j < tagList.length; ++j) {
+                list.push(tagList[j]);                
+            }
         }
+        var data = {
+            _dom:function() {
+                return list;
+            },
+            css:function(css) {
+                for(var i = 0; i < list.length; ++i) {
+                    Css.apply(list[i], css);
+                }
+                return searchTag(tag);
+            },
+            set:function(key, val) {
+                for(var i = 0; i < list.length; ++i) {
+                    if(typeof val == "function") {
+                         list[i][key] = function() {
+                            val.call(data);
+                         };
+                    } else {
+                        list[i][key] = val;
+                    }
+                }
+                return searchTag(tag);
+            },
+            animate:function(duration, to, delta) {
+                for(var i = 0; i < list.length; ++i) {
+                    Animate.to(list[i], duration, to, delta);
+                }
+            }
+        };
+        if(list.length == 0)
+            data = undefined;
+        return data;
+    }
 }
 window.Dom = new Dom();
 function Css() {

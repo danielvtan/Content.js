@@ -1,27 +1,52 @@
 <html>
 <head>
     
-    <script type="text/javascript" src="js/Nu.js"></script>
+    <script type="text/javascript" src="js/EventDispatcher.js"></script>
+    <script type="text/javascript" src="js/Animate.js"></script>
     <script type="text/javascript" src="js/Dom.js"></script>
     <script type="text/javascript">
         
         function init() {
-            Dom.el(".class-test-child").setAttrib("height", "200px");
-            Dom.el(".class-test-child").css({ width: "50px", height: "50px", border: "1px solid #000000",
-                background:"#FFF000" }).setAttrib("onmouseover", function() { 
-                Dom.el(".class-test-child").css({border: "1px solid #FF2200"})
-            } );
+            //Dom.el(".class-test-child").set("height", "200px");
+           // Dom.el(".class-test-child").css({ width: "50px", height: "50px", border: "1px solid #000000",
+            //    background:"#FFF000" }).set("onmouseover", function() { 
+            //    Dom.el(".class-test-child").css({border: "1px solid #FF2200"})
+           // } );
+            //Dom.el(".test").set("onclick", function() { alert("haha"); } );
+            //Dom.el("#idTest").set("onclick", function() { alert("test"); } );
+           
             
-            Dom.el("#idTest").setAttrib("onclick", function() { alert("test"); } );
+            Dom.el(".test div img").set("onclick", function() { 
+                        this.css({border: "2px solid #FF0000"});
+                        this.animate(1000, { width:200, height:200 }, Animate.BOUNCE_OUT);
+                
+                        this.set("src", "https://graph.facebook.com/4/picture");
+                
+                       
+                        });
+            
+            Dom.el(".test div img").set("onmouseout", function() {
+                            this.animate(1000, { width:20, height:20 }, Animate.BOUNCE_OUT);
+                
+                        });
             
         }
-        Nu.addListener(NuEvent.LOAD, function() {
+        window.onload = function() {
             init();
-        });
+        }
     </script>    
 </head>
 <body>
-    <div id="idTest" height="100" class="class-test class2">
+    <div class="test">
+        <div>
+            <img class="ola" style="width:20px; height:20px" />
+            
+        </div>
+        <img class="test" />
+    </div>
+    
+    <div id="idTest"  class="class-test class2">
+        
         <div>
             <div id="idTestChild" class="class-test-child"></div>
             <div id="2" class="class-test-child"></div>

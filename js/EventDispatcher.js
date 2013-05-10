@@ -1,5 +1,5 @@
 
-function Nu() {
+function EventDispatcher() {
 	
 	var thisClass = this;
 	this.isIE = (navigator.appName == 'Microsoft Internet Explorer') ? true: false;
