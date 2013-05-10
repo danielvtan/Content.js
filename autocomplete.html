@@ -22,24 +22,41 @@
                 { image:"images/1.gif", data:"asdf"}];
     
 </script>
-<div id="autoCon">
-</div>
+<form>
+    <div id="autoCon">
+    </div>
+        
+    <div id="autoCon2">
+    </div>    
+    <input type="submit">
+</form>
 <script type="text/javascript">
-    var auto = new AutoComplete("autoCon");
-    auto.setDesign('<span class="name">${data}</span>');
-    auto.setDB(friendDB);
-    //auto.maxContent = 5;
-    auto.addListener(ContentEvent.CONTENT_SELECT, onAutoSelect);
-    auto.addListener(ContentEvent.CONTENT_OVER, onAutoOver);
-    //auto.selectEnabled = false;
-    auto.getInput().placeholder = "Type your friends name";
-    //auto.show();
-    function onAutoOver(e) {
-        auto.getInput().value = e.data;
-    }
-    function onAutoSelect(e) {
-        auto.getInput().value = e.data;
-        auto.hideContent();
+    window.onload = function() {
+        var auto = new AutoComplete("autoCon");
+        auto.setDesign('<span class="name">${data}</span>');
+        auto.setDB(friendDB);
+        //auto.maxContent = 5;
+        auto.addListener(ContentEvent.CONTENT_SELECT, function(e) {
+            auto.getInput().value = e.data;
+            auto.hideContent();
+        });
+        auto.addListener(ContentEvent.CONTENT_OVER, function(e) {
+            auto.getInput().value = e.data;
+        });
+        auto.getInput().placeholder = "Type your friends name";
+        
+        var auto2 = new AutoComplete("autoCon2");
+        auto2.setDesign('<span class="name">${data}</span>');
+        auto2.setDB(friendDB);
+        //auto.maxContent = 5;
+        auto2.addListener(ContentEvent.CONTENT_SELECT, function(e) {
+            auto2.getInput().value = e.data;
+            auto2.hideContent();
+        });
+        auto2.addListener(ContentEvent.CONTENT_OVER, function(e) {
+            auto2.getInput().value = e.data;
+        });
+        auto2.getInput().placeholder = "Type your friends name";
     }
 </script>
 </body>
