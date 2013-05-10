@@ -32,31 +32,9 @@
 </form>
 <script type="text/javascript">
     window.onload = function() {
-        var auto = new AutoComplete("autoCon");
-        auto.setDesign('<span class="name">${data}</span>');
-        auto.setDB(friendDB);
-        //auto.maxContent = 5;
-        auto.addListener(ContentEvent.CONTENT_SELECT, function(e) {
-            auto.getInput().value = e.data;
-            auto.hideContent();
-        });
-        auto.addListener(ContentEvent.CONTENT_OVER, function(e) {
-            auto.getInput().value = e.data;
-        });
-        auto.getInput().placeholder = "Type your friends name";
+        var auto = new AutoComplete("autoCon", friendDB);
         
-        var auto2 = new AutoComplete("autoCon2");
-        auto2.setDesign('<span class="name">${data}</span>');
-        auto2.setDB(friendDB);
-        //auto.maxContent = 5;
-        auto2.addListener(ContentEvent.CONTENT_SELECT, function(e) {
-            auto2.getInput().value = e.data;
-            auto2.hideContent();
-        });
-        auto2.addListener(ContentEvent.CONTENT_OVER, function(e) {
-            auto2.getInput().value = e.data;
-        });
-        auto2.getInput().placeholder = "Type your friends name";
+        var auto2 = new AutoComplete("autoCon2", friendDB);
     }
 </script>
 </body>

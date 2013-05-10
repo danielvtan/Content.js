@@ -9,10 +9,6 @@ function EventDispatcher() {
     
 	this.eventInterval;
     
-    this.init = function() {
-        this.listeners = {};
-    }
-    
 	this.mouse = function(e){
 		var mouse = new Object();
 		
@@ -70,12 +66,19 @@ function EventDispatcher() {
 	this.dispatchEvent = function(type, e){
 		if(this.listeners[type] == undefined)
             return;
-		this.listeners[type](e);
+        
+		for(var i = 0; i < this.listeners[type].length; ++i) {
+            this.listeners[type][i](e);
+        }
 	}
 	this.addListener = function(type, listener, target){
-		this.listeners[type] = listener;
-			
+        if(this.listeners[type] == undefined) 
+            this.listeners[type] = [];
+        this.listeners[type].push(listener);
+        
 		var t = (target != null) ? target : this.defaultTarget;
+        if(t[type] == undefined)
+            return;
 		t[type] = function(e){
             if(t != thisClass.defaultTarget)
                 t.dispatchEvent(type, e);
