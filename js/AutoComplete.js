@@ -43,7 +43,6 @@ function AutoComplete(containerID) {
 		    default:
 		    break;
 	    }
-        e.preventDefault();
     }
 	autoInput.onkeyup = function(e) {
 	    var code = thisClass.keyCode(e);
