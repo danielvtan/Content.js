@@ -69,9 +69,14 @@ function Dom() {
 		target.setAttribute("className", target.className + " " + className);
 	}
 	this.removeClass = function(target, className) {
-        
-		var regEx = new RegExp(className, "i");
-		target.className = target.className.replace(regEx, "");
+        var classNames = target.className.split(" ");
+        var newClass = "";
+        for( var i = 0; i < classNames.length; ++i) {
+            if(className != classNames[i]) {
+                newClass += (i == 0) ? classNames[i] : " " + classNames[i];
+            }
+        }
+		target.className = newClass;
 	}
     function searchID(id, parent) {
         parent = (parent == undefined) ? doc : parent;
