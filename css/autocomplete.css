@@ -17,6 +17,9 @@
 .content-con li {
     list-style-type: none;
     padding-left: 10px;
+    font-weight:bold;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:11px;
 }
 .content-items {
     padding: 0px;
