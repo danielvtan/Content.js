@@ -7,13 +7,19 @@ var ContentEvent = {
 	};
 
 
-if(window.Dom == null)
-	throw "Content requires Dom.js";
-if(window.EventDispatcher == null)
-	throw "Content Class requires EventDispatcher.js";
-Content.prototype = EventDispatcher;
-Content.prototype.constructor = Content;
+if(window.Dom == null) {
+    console.log("Content.js requires Dom.js");
+    Require.script("js/Dom.js");
+}
+if(window.EventDispatcher == null) {
+    console.log("Content.js requires EventDispatcher.js");
+    Require.script("js/EventDispatcher.js");
+}
+
 function Content(builderID) {
+    Content.prototype = EventDispatcher;
+    Content.prototype.constructor = Content;
+    
     EventDispatcher.apply(this, arguments)
     
 	var thisClass = this;

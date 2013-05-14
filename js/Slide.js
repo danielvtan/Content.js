@@ -1,9 +1,11 @@
-if(window.Dom == null)
-	throw "Slide requires Dom.js";
-if(window.Animate == null)
-	throw "Slide requires Animate.js";
-if(window.Dom == null)
-	throw "Slide requires Content.js";
+if(window.Animate == null) {
+    console.log("Slide.js requires Animate.js");
+    Require.script("js/Animate.js");
+}
+if(window.Dom == null) {
+    console.log("Slide.js requires Content.js");
+    Require.script("js/Content.js");
+}
 function Slide(container, sliderData, width) {
     Dom.el(container).innerHTML = '<div id="' + container + 'Slide"></div>' + 
                                 '<div id="' + container + 'Thumb"></div>' +

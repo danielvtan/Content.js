@@ -119,11 +119,3 @@ var NuEvent = {
             LOAD:"onload"
 
             };
-
-
-
-// if Array.prototype.indexOf is not supported
-if (!Array.prototype.indexOf) {
-	Array.prototype.indexOf=function(o,i){for(var j=this.length,i=i<0?i+j<0?0:i+j:i||0;i<j&&this[i]!==o;i++);return j<=i?-1:i}
-}
-

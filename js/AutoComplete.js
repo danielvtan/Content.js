@@ -1,16 +1,31 @@
-if(window.Content == null)
-	throw "AutoComplete requires Content.js";
-AutoComplete.prototype = Content;
-AutoComplete.prototype.constructor = AutoComplete;
+if(window.Content == null) {
+    console.log("AutoComplete.js requires Content.js");
+    Require.script("js/Content.js");
+}
+
 function AutoComplete(containerID, database) {
+    AutoComplete.prototype = Content;
+    AutoComplete.prototype.constructor = AutoComplete;
+    
     Content.apply(this, arguments);
     
 	var thisClass = this;
    
 	var con = Dom.el(containerID);
-    Dom.addClass(con, "auto-con");
-	con.innerHTML = '<input id="'+ containerID + 'Input" class="auto-input" name="' + containerID + '" type="text" autocomplete="off"><div class="content-con" id="' + containerID + 'ContentCon"></div>';
-    
+   
+    if(con.tagName == Dom.type.INPUT) {
+        con.id = containerID + "Input";
+        Dom.addClass(con, "auto-input");
+        con.name = containerID;
+        con.autocomplete = "off";
+        
+        var parent = con.parentNode;
+        parent.replaceChild(Dom.create(Dom.type.DIV, containerID), con);
+        Dom.el(containerID).appendChild(con);
+        Dom.add(Dom.el(containerID), Dom.create(Dom.type.DIV, containerID + "ContentCon"), "content-con")
+    } else {
+	   con.innerHTML = '<input id="'+ containerID + 'Input" class="auto-input" name="' + containerID + '" type="text" autocomplete="off"><div class="content-con" id="' + containerID + 'ContentCon"></div>';
+    }
 	var autoContent = Dom.el(containerID + "ContentCon");
     autoContent.style.display = "none";
 	var autoInput = Dom.el(containerID + "Input");
@@ -53,7 +68,10 @@ function AutoComplete(containerID, database) {
 	autoInput.onfocus = function(){
 		showList();
 		};
-    
+    autoInput.onblur = function(){
+        thisClass.hideContent();
+        autoContent.style.display = "none";
+    }
     autoInput.onkeydown = function(e) {
         var code = thisClass.keyCode(e);
         switch(code) {

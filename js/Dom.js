@@ -14,7 +14,8 @@ function Stat() {
 function Dom() {
     var doc = document;
     this.type = {
-        DIV:"div"
+        DIV:"DIV",
+        INPUT:"INPUT"
     };
     this.create = function(type, id) {
         var e = doc.createElement(type);
@@ -65,8 +66,14 @@ function Dom() {
         return d;
     }
     this.addClass = function(target, className) {
-		target.setAttribute("class", target.className + " " + className);
-		target.setAttribute("className", target.className + " " + className);
+		if(target.className == "") {
+            target.setAttribute("class", className);
+            target.setAttribute("className", className);
+        } else {
+            target.setAttribute("class", target.className + " " + className);
+            target.setAttribute("className", target.className + " " + className);
+        }
+            
 	}
 	this.removeClass = function(target, className) {
         var classNames = target.className.split(" ");

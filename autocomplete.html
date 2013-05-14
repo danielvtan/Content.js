@@ -5,9 +5,7 @@
     <title>Autocomplete</title>
     <link rel="stylesheet" type="text/css" href="css/autocomplete.css">
 
-    <script type="text/javascript" src="js/Dom.js"></script>
-    <script type="text/javascript" src="js/EventDispatcher.js"></script>
-    <script type="text/javascript" src="js/Content.js"></script>
+    <script type="text/javascript" src="js/Require.js"></script>
     <script type="text/javascript" src="js/AutoComplete.js"></script>
 </head>
 <body>
@@ -28,14 +26,18 @@
         
     <div id="autoCon2">
     </div>    
+    
+    <input id="autoCon3" />
+    
     <input type="submit">
 </form>
 <script type="text/javascript">
     window.onload = function() {
         var auto = new AutoComplete("autoCon", friendDB);
-        
         var auto2 = new AutoComplete("autoCon2", friendDB);
+        var auto3 = new AutoComplete("autoCon3", friendDB);
     }
+   
 </script>
 </body>
 </html>
