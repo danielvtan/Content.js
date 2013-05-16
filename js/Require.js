@@ -8,12 +8,6 @@ function Require(){
             classes.push(classCall);
         scriptDependencies(classCall);
     }
-    this.test = function() {
-        for(var i = 0; i < classes.length; ++i) {
-            thisClass.script(classes[i]);
-            console.log("ga");
-        }
-    }
     function scriptDependencies(classCall){
         var script = document.createElement("script");
         script.src = thisClass.baseURL + classCall;

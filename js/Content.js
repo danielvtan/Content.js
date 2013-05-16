@@ -1,3 +1,7 @@
+/** list of event used in {@link Content}
+    @property {String} CONTENT_SELECT - triggers when content is selected
+    @property {String} CONTENT_SHOW - triggers when content is shown
+*/
 var ContentEvent = {
 	CONTENT_SELECT:"CONTENT_SELECT",
 	CONTENT_SHOW:"CONTENT_SHOW",
@@ -15,14 +19,25 @@ if(window.EventDispatcher == null) {
     console.log("Content.js requires EventDispatcher.js");
     Require.script("js/EventDispatcher.js");
 }
-
-function Content(builderID) {
+/**
+    @constructor
+    @augments EventDispatcher
+    @requires Dom 
+    
+    @param {String} builderID - id of dom container
+    @param {Array} database - array of object
+    
+    @example
+    // returns an instance of Content class
+    new Content("id", [{data:"test1"}, {data:"test2"}])
+*/
+function Content(builderID, database) {
     Content.prototype = EventDispatcher;
     Content.prototype.constructor = Content;
     
-    EventDispatcher.apply(this, arguments)
+    EventDispatcher.apply(this, arguments);
     
-	var thisClass = this;
+    var thisClass = this;
     
 	var design = "";
 	var list = [];
@@ -44,8 +59,10 @@ function Content(builderID) {
 	
 	this.contentTag = "li";
 	this.contentTagCon = "ul";
-	
-	
+    
+    /** set the tag type that will be used
+        @param {String} s - type of tag
+    */
 	this.setTagType = function(s) {
 		switch(s){
 			case "div":
@@ -56,6 +73,9 @@ function Content(builderID) {
 			break;
 		}
 	}
+    /** set the builder id
+        @param {String} i - id
+    */
 	this.setBuilderID = function(i) {
 		id = i;
 	}
@@ -65,6 +85,7 @@ function Content(builderID) {
 	this.setDB = function(database) {
 		db = database;
 	}
+    
 	this.setDesign = function(d) {
 		design = d;
 	}
@@ -89,6 +110,9 @@ function Content(builderID) {
 	this.addData = function(itemData) {
 		db.push(itemData);
 	}
+    this.getData = function(itemData) {
+        return db[db.indexOf(itemData)];
+    }
 	this.buildContent = function(data, design) {
 		var currentItem = design;
 	
@@ -209,6 +233,8 @@ function Content(builderID) {
 				thisClass.dispatchEvent(ContentEvent.CONTENT_HIDE, list);
 			});
 	}
+    
+    this.setDB(database);
 }
 
 

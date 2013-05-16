@@ -1,0 +1,72 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="css/category.css">
+    <script type="text/javascript" src="js/Require.js" ></script>
+    <script type="text/javascript" src="js/Content.js" ></script>
+    
+    <script type="text/javascript" >
+    
+        window.onload = function() {
+            var list = [
+                        {category:"dog", name:"puti"},
+                        {category:"dog", name:"itim"},
+                        {category:"dog", name:"aso"},
+                        {category:"dog", name:"arf"},
+                        {category:"dog", name:"arf arf"},
+                        {category:"dog", name:"bulldog"},
+                        {category:"dog", name:"puti2"},
+                        {category:"dog", name:"itim2"},
+                        {category:"dog", name:"aso2"},
+                
+                        {category:"cat", name:"meow"},
+                        {category:"cat", name:"pusa"},
+                        {category:"cat", name:"cat"},
+                        {category:"cat", name:"persian"},
+                        {category:"cat", name:"cat bell"},
+                        {category:"cat", name:"meow meow"},
+                        {category:"cat", name:"pusa2"},
+                        {category:"cat", name:"cat2"},
+                        {category:"cat", name:"persian2"},
+                
+                        {category:"fish", name:"fishy"},
+                        {category:"fish", name:"scales"},
+                        {category:"fish", name:"gills"},
+                        {category:"fish", name:"fish eye"},
+                        {category:"fish", name:"fishy fishy"},
+                        {category:"fish", name:"fishy2"},
+                        {category:"fish", name:"scales2"},
+                        {category:"fish", name:"gills2"}
+            
+                        ];
+            var category = new Content("list", list);
+            category.setDesign('<span class="${category}">${name}</span>');
+            Dom.el("listCon").innerHTML = category.getContent();
+            
+            Dom.el("dogBtn").onclick = function() {
+                selectPet("dog");
+            }
+            Dom.el("catBtn").onclick = function() {
+                selectPet("cat");
+            }
+            Dom.el("fishBtn").onclick = function() {
+                selectPet("fish");
+            }
+            function selectPet(type) {
+                Dom.el("listCon").innerHTML = category.getContent(type, "category");
+            }
+            selectPet("dog");
+            
+        }
+    
+    </script>
+</head>
+<body>
+    Categories:
+    <a id="dogBtn" class="tabs" >dog</a>
+    <a id="fishBtn" class="tabs" >fish</a>
+    <a id="catBtn" class="tabs" >cat</a>
+    <div id="listCon" >
+    
+    </div>
+</body>
+</html>

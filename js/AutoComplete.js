@@ -1,8 +1,14 @@
+
 if(window.Content == null) {
     console.log("AutoComplete.js requires Content.js");
     Require.script("js/Content.js");
 }
-
+/**
+    @constructor
+    @augments Content
+    @param {string} containerID - id of dom container
+    @param {object} database - object of data
+*/
 function AutoComplete(containerID, database) {
     AutoComplete.prototype = Content;
     AutoComplete.prototype.constructor = AutoComplete;
@@ -10,9 +16,7 @@ function AutoComplete(containerID, database) {
     Content.apply(this, arguments);
     
 	var thisClass = this;
-   
 	var con = Dom.el(containerID);
-   
     if(con.tagName == Dom.type.INPUT) {
         con.id = containerID + "Input";
         Dom.addClass(con, "auto-input");
@@ -30,47 +34,62 @@ function AutoComplete(containerID, database) {
     autoContent.style.display = "none";
 	var autoInput = Dom.el(containerID + "Input");
 	
-    this.setDB(database);
     this.setDesign('<span>${data}</span>');
 	this.setBuilderID(containerID + "Content");
-	this.show = showList;
-	
-	function showList() {
+	this.show = function(x, y) {
 		thisClass.showContent();
 		autoContent.innerHTML = thisClass.getContent();
 		thisClass.activeContent(0);
-	}
-	this.getInput = function() {
-		return autoInput;
+        if(x != null)
+			con.style.left = x + "px";
+		if(y != null)
+			con.style.top = y + "px";
 	}
     
     this.autoHide = true;
-    this.autoSet = true;
+    this.autoFill = true;
+    this.autoSetOver = false;
     
+    /**
+        hides the autocontent dom element
+    */
+    this.hide = function() {
+        thisClass.hideContent();
+        autoContent.style.display = "none";
+    }
+    this.clear = function() {
+        thisClass.getInput().value = "";
+    }
+	this.getInput = function() {
+		return autoInput;
+	}
+    this.reload = function() {
+        autoContent.innerHTML = thisClass.getContent(autoInput.value);
+        thisClass.activeContent(0);
+    }
     
     thisClass.addListener(ContentEvent.CONTENT_SHOW, function(e) {
         autoContent.style.display = "block";
     });
     thisClass.addListener(ContentEvent.CONTENT_SELECT, function(e) {
-        if(thisClass.autoHide)
+        if(thisClass.autoHide) {
             thisClass.hideContent();
-        autoContent.style.display = "none";
-    });
-    thisClass.addListener(ContentEvent.CONTENT_SELECT, function(e) {
-        if(thisClass.autoSet)
+            autoContent.style.display = "none";
+        }
+        if(thisClass.autoFill)
             thisClass.getInput().value = e.data;
     });
     thisClass.addListener(ContentEvent.CONTENT_OVER, function(e) {
-        if(thisClass.autoSet)
+        if(thisClass.autoSetOver)
             thisClass.getInput().value = e.data;
     });
     
 	autoInput.onfocus = function(){
-		showList();
+		thisClass.show();
 		};
     autoInput.onblur = function(){
-        thisClass.hideContent();
-        autoContent.style.display = "none";
+        //thisClass.hideContent();
+        //autoContent.style.display = "none";
     }
     autoInput.onkeydown = function(e) {
         var code = thisClass.keyCode(e);
@@ -101,7 +120,30 @@ function AutoComplete(containerID, database) {
             break;
             default:
                 // nay other key
-                showList();
+            break;
+	    }
+    }
+    autoInput.onkeyup = function(e) {
+        var code = thisClass.keyCode(e);
+        switch(code) {
+            case 9:
+                 // tab
+            break;
+            case 13:
+                 // enter
+
+            break;
+            case 40:
+                // arrow down
+                
+            break;
+            case 38:
+                // arrow up
+               
+            break;
+            default:
+                // nay other key
+                thisClass.show();
                 autoContent.innerHTML = thisClass.getContent(autoInput.value);
                 thisClass.activeContent(0);
             break;

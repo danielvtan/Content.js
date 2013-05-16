@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Facebook sample</title>
+    <link rel="stylesheet" type="text/css" href="css/autocomplete-fb.css">
+    <script type="text/javascript" src="js/Require.js"></script>
+    <script type="text/javascript" src="js/AutoComplete.js"></script>
+</head>
+<body>
+<div id="bgContent">
+</div>
+<div id="autoTag">
+</div>
+<div id="tagFriendsList"></div>
+<script type="text/javascript">
+    var friendDB = [{ fbid:"4", data:"dan", class:"not-selected"},
+                { fbid:"5", data:"daniel", class:"not-selected"},
+                { fbid:"6", data:"tan", class:"not-selected"},
+                { fbid:"7", data:"daniel tan", class:"not-selected"},
+                { fbid:"8", data:"valladolid", class:"not-selected"}];
+    
+    var friends = [];
+	var names = [];
+	var items = [];
+	var ac;
+	window.onload = function() {
+        ac = new AutoComplete("autoTag", friendDB);
+        ac.autoSetOver = true;
+        ac.maxContent = 10;
+        ac.setDesign('<img class="${class}" src="https://graph.facebook.com/${fbid}/picture?type=square" /> <span class="name">${data}</span>');
+        ac.show(300, 100);
+        ac.getInput().placeholder = "Type your friends name";
+        ac.addListener(ContentEvent.CONTENT_SELECT, function(e){
+            saveFriendData(e);
+            ac.clear();
+        });
+        
+        Dom.el("bgContent").onclick = function(e){
+            var mouse = ac.mouse(e);
+            ac.show(mouse.x, mouse.y);
+        };
+        function saveFriendData(e) {
+            Dom.el("tagFriendsList").innerHTML += addTags(e);
+            if(names.length >= 5) {
+                Dom.el("autoTag").style.display = "none";
+                return;
+            }
+        }
+        function addTags(e) {
+            ac.removeData(e);
+            items.push(e);
+            friends.push(e.fbid);
+            names.push(e.data);
+            
+            return '<span id="tag' + e.fbid + '"><span>' + e.data  + '</span><a href="#" id="' + e.fbid + '" onclick="addFriend(this)"> x </a></span>';
+        }
+    }
+    function addFriend(e) {
+        Dom.el("tagFriendsList").removeChild(Dom.el("tag" + e.id));
+        Dom.el("autoTag").style.display = "block";
+        for(var i = 0; i < items.length; ++i) {
+            if(items[i].fbid == e.id){
+                ac.addData(items[i]);	
+                items.splice(i, 1);
+                friends.splice(i, 1);
+                names.splice(i, 1);
+                break;
+            }
+        }
+    }
+</script>
+</body>
+</html>

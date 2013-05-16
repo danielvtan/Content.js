@@ -1,36 +1,58 @@
-var ti;
-var te;
-function Stat() {
-    if(ti)
-        te = new Date();
-    else
-        ti = new Date();
-    if(ti && te) {
-        //console.log(te-ti);
-        te = ti = null;
-    }
-}
-
+/** By default Dom is already instantiated
+    @constructor
+    @example
+    // returns div element with an id of testID
+    Dom.create("div", testID);
+*/
 function Dom() {
     var doc = document;
+    /** list of tags
+        @property {String} DIV - "DIV"
+        @property {String} INPUT - "INPUT"
+    */
     this.type = {
         DIV:"DIV",
         INPUT:"INPUT"
     };
+    /** creates a dom element
+        @param {String} type - name of element
+        @param {String} id - id of element
+        @returns a dom element
+    */
     this.create = function(type, id) {
         var e = doc.createElement(type);
         if(id)
                 e.id = id;
         return e;
     }
+    /** add a dom element
+        @param {Dom} parent - parent dom element
+        @param {Dom} dom - dom element to add
+        @param {String} className - name of the css class
+        @returns dom element
+    */
     this.add = function(parent, dom, className){
-            if(className != null) {
-                dom.setAttribute("class", className);
-                dom.setAttribute("className", className);
-            }
+            if(className != null)
+                Dom.addClass(dom, className);
             parent.appendChild(dom);
             return dom;
     }
+    /** use to get the element by using its id, tag or class
+        @param {String} id - can be id, tag or class
+        @returns an element or mulitiple element
+        
+        @example
+        // returns a normal dom element
+        Dom.el("testID") // get element by id
+        // returns an object with functions
+        Dom.el("#testID") // get element by id
+        // returns an object with functions
+        Dom.el(".test-class") // get element by class name
+        // returns an object with functions
+        Dom.el("DIV") // get element by tag
+        // returns an object with functions
+        Dom.el(".test-class DIV") // get element by class and tag
+    */
     this.el = function(id) {
         var d;
         var ids = id.split(" ");
@@ -117,7 +139,6 @@ function Dom() {
     }
     function searchClass(id, parents) {
         parents = (parents == undefined) ? [doc.body] : parents;
-        Stat();
         var list = [];
         function loopSearch(dom, id) {
             for(var i = 0; i < dom.childNodes.length; ++i) {
@@ -138,8 +159,6 @@ function Dom() {
         for(var i = 0; i < parents.length; ++i) {
             loopSearch(parents[i], id)
         }
-        Stat();
-        
         var data = {
             _dom:function() {
                 return list;
@@ -213,6 +232,9 @@ function Dom() {
         return data;
     }
 }
+/** Dom
+    @instance
+*/
 window.Dom = new Dom();
 function Css() {
     var rules = {};
