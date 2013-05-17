@@ -29,7 +29,7 @@
         ac.autoSetOver = true;
         ac.maxContent = 10;
         ac.setDesign('<img class="${class}" src="https://graph.facebook.com/${fbid}/picture?type=square" /> <span class="name">${data}</span>');
-        ac.show(300, 100);
+        ac.show(0, 0);
         ac.getInput().placeholder = "Type your friends name";
         ac.addListener(ContentEvent.CONTENT_SELECT, function(e){
             saveFriendData(e);

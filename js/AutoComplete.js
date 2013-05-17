@@ -17,22 +17,36 @@ function AutoComplete(containerID, database) {
     
 	var thisClass = this;
 	var con = Dom.el(containerID);
+    
+    var autoInput;
+    var autoContent;
     if(con.tagName == Dom.type.INPUT) {
-        con.id = containerID + "Input";
-        Dom.addClass(con, "auto-input");
-        con.name = containerID;
-        con.autocomplete = "off";
+        autoContent = Dom.create(Dom.type.DIV, containerID + "ContentCon");
+        autoInput = con;
+        autoInput.id = containerID + "Input";
         
-        var parent = con.parentNode;
-        parent.replaceChild(Dom.create(Dom.type.DIV, containerID), con);
-        Dom.el(containerID).appendChild(con);
-        Dom.add(Dom.el(containerID), Dom.create(Dom.type.DIV, containerID + "ContentCon"), "content-con")
+        var parent = autoInput.parentNode;
+        parent.replaceChild(Dom.create(Dom.type.DIV, containerID), autoInput);
+        Dom.el(containerID).appendChild(autoInput);
+        
+        Dom.el(containerID).appendChild(autoContent)
+
+        
     } else {
-	   con.innerHTML = '<input id="'+ containerID + 'Input" class="auto-input" name="' + containerID + '" type="text" autocomplete="off"><div class="content-con" id="' + containerID + 'ContentCon"></div>';
+        autoInput = Dom.create(Dom.type.INPUT, containerID + "Input");
+        con.appendChild(autoInput);
+        
+        autoContent = Dom.create(Dom.type.DIV, containerID + "ContentCon");
+        con.appendChild(autoContent);
+        
     }
-	var autoContent = Dom.el(containerID + "ContentCon");
+    Dom.addClass(autoInput, "auto-input");
+    autoInput.name = containerID;
+    autoInput.autocomplete = "off";
+    autoInput.type = "text";
+    
+	Dom.addClass(autoContent, "content-con");
     autoContent.style.display = "none";
-	var autoInput = Dom.el(containerID + "Input");
 	
     this.setDesign('<span>${data}</span>');
 	this.setBuilderID(containerID + "Content");

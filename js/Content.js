@@ -125,35 +125,84 @@ function Content(builderID, database) {
 			
 		return currentItem;
 	}
-	this.getContent = function(filter, key) {
-		currentFilter = filter;
+    this.filter = function(filter, key, tempDB) {
+        currentFilter = filter;
 		currentSelected = 0;
 		currentActive = 0;
-		
-		var contents = "<" + this.contentTagCon + " id='" + id + "' class='content-items'>";
-		
-		var dbLength = db.length;
+        
+        tempDB = tempDB ? tempDB: db;
+        
+        
+        
+		var dbLength = tempDB.length;
 		var ctr = 0;
 		list = [];
 		for(var i = 0; i < dbLength; ++i){
-			db[i].id = i;
+			tempDB[i].id = i;
 					
 			if(currentFilter) {
 				if(!key)
 					key = this.defaultKey;
-				var data = String(db[i][key]);
-				
+				var data = String(tempDB[i][key]);
 				var regEx = new RegExp(currentFilter, "i");
+
 				if(data.search(regEx) >= 0) {
-					list.push(db[i]);
-					contents += "<"+ this.contentTag +" id='"+ id + "-" + (list.length -1)  + "' class='content-item  " + id + "'>" + this.buildContent(db[i], this.getDesign()) + "</"+ this.contentTag +">";
-				
+                    list.push(tempDB[i]);
 				}
 			}else {
-				list.push(db[i]);
-				contents += "<"+ this.contentTag +" id='"+ id + "-" + (list.length -1)  + "' class='content-item  " + id + "'>" + this.buildContent(db[i], this.getDesign()) + "</"+ this.contentTag +">";
-				
+				list.push(tempDB[i]);
 			}
+			if(list.length >= this.maxContent)
+				break;
+		}
+        return list;
+    }
+	this.getContent = function(filter, key, tempDB) {
+		currentFilter = filter;
+		currentSelected = 0;
+		currentActive = 0;
+        
+        tempDB = tempDB ? tempDB: db;
+        
+		var contents = "<" + this.contentTagCon + " id='" + id + "' class='content-items'>";
+		
+		var dbLength = tempDB.length;
+		var ctr = 0;
+		list = [];
+        
+        var isFound;
+		for(var i = 0; i < dbLength; ++i){
+			tempDB[i].id = i;
+
+            isFound = false;
+			if(currentFilter) {
+				if(!key)
+					key = this.defaultKey;
+				var data = String(tempDB[i][key]);
+				var regEx = new RegExp(currentFilter, "i");
+                
+				if(data.search(regEx) >= 0) {
+                    isFound = true;
+				}
+			}else {
+				
+                isFound = true;
+			}
+            
+            if(isFound) {
+                list.push(tempDB[i]);
+                
+                var item = Dom.create(this.contentTag, id + "-" + (list.length - 1));
+                Dom.addClass(item, "content-item");
+                Dom.addClass(item, id);
+                item.innerHTML = this.buildContent(tempDB[i], this.getDesign());
+                
+                var temp = Dom.create(Dom.type.DIV);
+                temp.appendChild(item);
+                
+                
+                contents += temp.innerHTML;
+            }
 			
 			if(list.length >= this.maxContent)
 				break;

@@ -12,7 +12,9 @@ function Dom() {
     */
     this.type = {
         DIV:"DIV",
-        INPUT:"INPUT"
+        INPUT:"INPUT",
+        UL:"UL",
+        LI:"LI"
     };
     /** creates a dom element
         @param {String} type - name of element
@@ -24,18 +26,6 @@ function Dom() {
         if(id)
                 e.id = id;
         return e;
-    }
-    /** add a dom element
-        @param {Dom} parent - parent dom element
-        @param {Dom} dom - dom element to add
-        @param {String} className - name of the css class
-        @returns dom element
-    */
-    this.add = function(parent, dom, className){
-            if(className != null)
-                Dom.addClass(dom, className);
-            parent.appendChild(dom);
-            return dom;
     }
     /** use to get the element by using its id, tag or class
         @param {String} id - can be id, tag or class
@@ -88,14 +78,14 @@ function Dom() {
         return d;
     }
     this.addClass = function(target, className) {
+        var newClass;
 		if(target.className == "") {
-            target.setAttribute("class", className);
-            target.setAttribute("className", className);
+            newClass = className;
         } else {
-            target.setAttribute("class", target.className + " " + className);
-            target.setAttribute("className", target.className + " " + className);
+            newClass = target.className + " " + className;   
         }
-            
+        target.setAttribute("class", newClass);
+        target.setAttribute("className", newClass);
 	}
 	this.removeClass = function(target, className) {
         var classNames = target.className.split(" ");
