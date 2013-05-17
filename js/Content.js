@@ -1,6 +1,19 @@
+/**
+    @file Content
+    <a href="../category.html">Demo 1</a>
+    <a href="../test.html">Demo 2</a>
+    @author Daniel Tan
+    @example
+    // returns an instance of Content class
+    var content = new Content("id", [{data:"test1"}, {data:"test2"}])
+*/
+
 /** list of event used in {@link Content}
     @property {String} CONTENT_SELECT - triggers when content is selected
     @property {String} CONTENT_SHOW - triggers when content is shown
+    @property {String} CONTENT_HIDE - triggers when content is hidden
+    @property {String} CONTENT_OVER - triggers when mouse is over the content
+    @property {String} CONTENT_OUT - triggers when mouse is out of the content
 */
 var ContentEvent = {
 	CONTENT_SELECT:"CONTENT_SELECT",
@@ -26,10 +39,6 @@ if(window.EventDispatcher == null) {
     
     @param {String} builderID - id of dom container
     @param {Array} database - array of object
-    
-    @example
-    // returns an instance of Content class
-    new Content("id", [{data:"test1"}, {data:"test2"}])
 */
 function Content(builderID, database) {
     Content.prototype = EventDispatcher;
@@ -74,45 +83,85 @@ function Content(builderID, database) {
 		}
 	}
     /** set the builder id
-        @param {String} i - id
+        @param {String} i - id of the builder
     */
 	this.setBuilderID = function(i) {
 		id = i;
 	}
+    /** get the builder id
+        @returns id builder id
+    */
 	this.getBuilderID = function() {
 		return id;
 	}
+    /** set the database
+        @param {Array} database - database to be used
+    */
 	this.setDB = function(database) {
 		db = database;
 	}
-    
+    /** set the design template
+        @param {String} d - design template
+    */
 	this.setDesign = function(d) {
 		design = d;
 	}
+    /** get the design template
+        @returns design template
+    */
 	this.getDesign = function() {
 		return design;
 	}
+    /** get the list
+        @returns the list
+    */
 	this.getList = function() {
 		return list;
 	}
+    /** get the current data
+        @returns the data
+    */
 	this.getCurrentData = function() {
 		return this.getList()[this.getCurrentSelected()];
 	}
+    /** get current selected
+        @returns the current selected
+    */
 	this.getCurrentSelected = function() {
 		return currentSelected;
 	}
+    /** get current active
+        @returns the current active
+    */
 	this.getCurrentActive = function() {
 		return currentActive;
 	}
+    /** remove data from the database
+        @param {Object} itemData - item data to remove
+    */
 	this.removeData = function(itemData) {
 		db.splice(itemData.id, 1);
 	}
+    /** add data from the database
+        @param {Object} itemData - item data to add
+    */
 	this.addData = function(itemData) {
 		db.push(itemData);
 	}
+    /** get an item from the database
+        @param {Object} itemData - item to pull from database
+        @returns the item
+    */
     this.getData = function(itemData) {
         return db[db.indexOf(itemData)];
     }
+    /** use to build content
+        @param {Object} data - from the database
+        @param {String} design - set design
+        @returns the content
+        
+        @protected
+    */
 	this.buildContent = function(data, design) {
 		var currentItem = design;
 	
@@ -125,6 +174,13 @@ function Content(builderID, database) {
 			
 		return currentItem;
 	}
+    /** get data from the database using filter keys
+        @param {String} filter - the string to be filtered
+        @param {String} key - the key from the database
+        @param {Object} tempDB - temporary database to use
+        
+        @returns the filtered database
+    */
     this.filter = function(filter, key, tempDB) {
         currentFilter = filter;
 		currentSelected = 0;
@@ -157,6 +213,13 @@ function Content(builderID, database) {
 		}
         return list;
     }
+    /** get filtered html content
+        @param {String} filter - the string to be filtered
+        @param {String} key - the key from the database
+        @param {Object} tempDB - temporary database to use
+        
+        @returns the filtered html content
+    */
 	this.getContent = function(filter, key, tempDB) {
 		currentFilter = filter;
 		currentSelected = 0;
@@ -212,6 +275,9 @@ function Content(builderID, database) {
 		
 		return contents += "</"+ this.contentTagCon +">";	
 	}
+    /** set the items to selectable
+        
+    */
 	this.setSelectable = function() {
 		var listLength = list.length;
 		for(var i = 0; i < listLength; ++i) {
@@ -224,51 +290,83 @@ function Content(builderID, database) {
 			
 		}
 	}
+    /** called when an item is clicked
+        @param {int} key - the id
+        @protected
+    */
 	this.onItemClick = function(key) {
 		this.selectContent(key);
 		this.dispatchEvent(ContentEvent.CONTENT_SELECT, list[currentSelected]);
 	}
+    /** select the content
+        @param {int} id - the id
+    */
 	this.selectContent = function(id) {
 		this.deSelect(currentSelected);
 		currentSelected = id;
 		this.selectByID(currentSelected);
 	}
+    /** de select the the content using its id
+        @param {String} id - the ids
+    */
 	this.deSelect = function(dataID) {
 		var target = Dom.el(id + "-" + dataID);
 		if(target)
 			Dom.removeClass(target, "selected");
 	}
+    /** select item by id
+        @param {String} dataID - item id
+    */
 	this.selectByID = function(dataID) {
 		var target = Dom.el(id + "-" + dataID);
 		if(target)
 			Dom.addClass(target, "selected");
 	}
-	
+	/** called when mouse i out
+        @param {int} key - the id
+        @protected
+    */
 	this.onItemOut = function(key) {
 		this.deActivate(key);
 		currentActive = 0;
 		this.dispatchEvent(ContentEvent.CONTENT_OUT, list[currentActive]);
 	}
-	
+	/** called when mouse is over
+        @param {int} key - the id
+        @protected
+    */
 	this.onItemOver = function(key) {
 		this.activeContent(key);
 		this.dispatchEvent(ContentEvent.CONTENT_OVER, list[currentActive]);
 	}
+    /** set the content to active
+        @param {int} id - item id
+    */
 	this.activeContent = function(id) {
 		this.deActivate(currentActive);
 		currentActive = id;
 		this.activeByID(currentActive);
 	}
+    /** remove the active state
+        @param {int} dataID - item id
+    */
 	this.deActivate = function(dataID) {
 		var target = Dom.el(id + "-" + dataID);
 		if(target)
 			Dom.removeClass(target,"active");
 	}
+    /** set the content to active by id
+        @param {String} dataID - item id
+        @protected
+    */
 	this.activeByID = function(dataID) {
 		var target = Dom.el(id + "-" + dataID);
 		if(target)
 			Dom.addClass(target, "active");
 	}
+    /** show the content
+        
+    */
 	this.showContent = function() {
 		this.addLiveListener(id, function(){
 				Dom.el(id).style.display = "block";
@@ -276,6 +374,9 @@ function Content(builderID, database) {
 			});
 		
 	}
+    /** hide the content
+    
+    */
 	this.hideContent = function() {
 		this.addLiveListener(id, function(){
 				Dom.el(id).style.display = "none";

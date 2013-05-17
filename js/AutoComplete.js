@@ -1,13 +1,28 @@
+/**
+    @file AutoComplete
+    <a href="../autocomplete.html">Demo 1</a>
+    <a href="../autocomplete-fb.html">Demo 2</a>
+    <a href="../autocomplete-fb2.html">Demo 3</a>
+    <a href="../autocomplete.html">Demo 4</a>
+    <a href="../test.html">Demo 5</a>
+    @author Daniel Tan
+    @example
+    // returns an instance of AutoComplete class
+    var auto = new AutoComplete("autoCon", friendDB);
+*/
+
 
 if(window.Content == null) {
     console.log("AutoComplete.js requires Content.js");
     Require.script("js/Content.js");
 }
-/**
+/** 
     @constructor
     @augments Content
     @param {string} containerID - id of dom container
     @param {object} database - object of data
+    
+    
 */
 function AutoComplete(containerID, database) {
     AutoComplete.prototype = Content;
@@ -64,24 +79,31 @@ function AutoComplete(containerID, database) {
     this.autoFill = true;
     this.autoSetOver = false;
     
-    /**
-        hides the autocontent dom element
+    /** hides the autocontent dom element
     */
     this.hide = function() {
         thisClass.hideContent();
         autoContent.style.display = "none";
     }
+    /** clears the input field
+        
+    */
     this.clear = function() {
         thisClass.getInput().value = "";
     }
+    /** get the input field
+        @returns the input field
+    */
 	this.getInput = function() {
 		return autoInput;
 	}
+    /** force reload the content displayed
+    
+    */
     this.reload = function() {
         autoContent.innerHTML = thisClass.getContent(autoInput.value);
         thisClass.activeContent(0);
     }
-    
     thisClass.addListener(ContentEvent.CONTENT_SHOW, function(e) {
         autoContent.style.display = "block";
     });

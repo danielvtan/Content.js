@@ -1,3 +1,20 @@
+/**
+    @file EventDispatcher
+    <a href="../test.html">Demo</a>
+    @author Daniel Tan
+    @example
+    // returns an instance of EventDispatcher class
+    var eventD = new EventDispatcher();
+    // adds an event
+    eventD.addEventListener("ON_USER_SCROLL", callBackFunction);
+    // dispatches the event to the listeners triggers the callBackFunction
+    dispatchEvent("ON_USER_SCROLL", addDataToPass);
+    // to extend add this in inside your class
+    YourClass.prototype = EventDispatcher;
+    YourClass.prototype.constructor = YourClass;
+    EventDispatcher.apply(this, arguments);
+*/
+
 /** list of events used in {@link EventDispatcher}
     @property {String} LOAD - triggers when browser is loaded completely
 */
@@ -7,12 +24,9 @@ var NuEvent = {
             };
 
 /**
-    EventDispatcher
+    EventDispatcher - an extendable event dispatcher class
     @constructor
     
-    @example
-    // returns an instance of EventDispatcher class
-    new EventDispatcher()
 */
 function EventDispatcher() {
 	/** this reference */

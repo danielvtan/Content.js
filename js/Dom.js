@@ -1,8 +1,14 @@
-/** By default Dom is already instantiated
-    @constructor
+/**
+    @file Dom
+    <a href="../test.html">Demo</a>
+    @author Daniel Tan
     @example
     // returns div element with an id of testID
     Dom.create("div", testID);
+*/
+
+/** By default Dom is already instantiated
+    @constructor
 */
 function Dom() {
     var doc = document;
@@ -77,6 +83,10 @@ function Dom() {
         loopSearch(ids[0]);
         return d;
     }
+    /** add a class to an element
+        @param {dom} target - dom target
+        @param {String} className - name of the class
+    */
     this.addClass = function(target, className) {
         var newClass;
 		if(target.className == "") {
@@ -87,6 +97,10 @@ function Dom() {
         target.setAttribute("class", newClass);
         target.setAttribute("className", newClass);
 	}
+    /** remove a class to an element
+        @param {dom} target - dom target
+        @param {String} className - name of the class
+    */
 	this.removeClass = function(target, className) {
         var classNames = target.className.split(" ");
         var newClass = "";
@@ -222,15 +236,28 @@ function Dom() {
         return data;
     }
 }
-/** Dom
-    @instance
-*/
 window.Dom = new Dom();
+
+/** By default Css is already instantiated
+    @constructor
+    @example
+    // returns apply the css object rules
+    Css.apply(dom, { width:"100px"});
+*/
 function Css() {
     var rules = {};
+    /** save a rule object
+        @param {String} name - name/class rule
+        @param {Object} css - rule object
+    */
     this.rule = function(name, css) {
             rules[name] = css;
-        }
+    }
+    /** apply a rule/css object
+        @param {dom} dom - dom element
+        @param {Object} css - rule object
+        @returns the dom element
+    */
     this.apply = function(dom, css) {
                 if(rules[css])
                     css = rules[css];
