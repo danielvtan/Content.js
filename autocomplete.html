@@ -4,20 +4,18 @@
 <head>
     <title>Autocomplete</title>
     <link rel="stylesheet" type="text/css" href="css/autocomplete.css">
-
     <script type="text/javascript" src="js/Require.js"></script>
-    <script type="text/javascript" src="js/AutoComplete.js"></script>
 </head>
 <body>
 <script type="text/javascript">
     /*
      * Object Database
      */
-    var friendDB = [{ image:"images/1.jpg", data:"adsdsds"},
-                { image:"images/2.jpg", data:"asd"},
-                { image:"images/3.jpg", data:"sdasd"},
-                { image:"images/4.jpg", data:"teasfasdfst"},
-                { image:"images/1.gif", data:"asdf"}];
+    var friendDB = [{ data:"adsdsds"},
+                { data:"asd"},
+                { data:"sdasd"},
+                { data:"teasfasdfst"},
+                { data:"asdf"}];
     
 </script>
 <form>
@@ -32,6 +30,8 @@
     <input type="submit">
 </form>
 <script type="text/javascript">
+    //Require.baseURL = "http://nwshare.ph/library/content/0.5/";
+    Require.script("js/AutoComplete.js");
     window.onload = function() {
         var auto = new AutoComplete("autoCon", friendDB);
         var auto2 = new AutoComplete("autoCon2", friendDB);
@@ -39,5 +39,6 @@
     }
    
 </script>
+
 </body>
 </html>

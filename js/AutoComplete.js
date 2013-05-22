@@ -107,10 +107,10 @@ function AutoComplete(containerID, database) {
     thisClass.addListener(ContentEvent.CONTENT_SHOW, function(e) {
         autoContent.style.display = "block";
     });
+    
     thisClass.addListener(ContentEvent.CONTENT_SELECT, function(e) {
         if(thisClass.autoHide) {
-            thisClass.hideContent();
-            autoContent.style.display = "none";
+            thisClass.hide();
         }
         if(thisClass.autoFill)
             thisClass.getInput().value = e.data;
@@ -119,13 +119,13 @@ function AutoComplete(containerID, database) {
         if(thisClass.autoSetOver)
             thisClass.getInput().value = e.data;
     });
-    
-	autoInput.onfocus = function(){
+	autoInput.onfocus = function(e){
 		thisClass.show();
 		};
-    autoInput.onblur = function(){
-        //thisClass.hideContent();
-        //autoContent.style.display = "none";
+    autoInput.onblur = function(e){
+        setTimeout(function(){
+             thisClass.hide();
+        }, 150);
     }
     autoInput.onkeydown = function(e) {
         var code = thisClass.keyCode(e);
@@ -138,6 +138,7 @@ function AutoComplete(containerID, database) {
                  // enter
                 thisClass.selectContent(thisClass.getCurrentActive());
                 thisClass.dispatchEvent(ContentEvent.CONTENT_SELECT, thisClass.getList()[thisClass.getCurrentActive()]);
+                window.event.returnValue = false;
                 e.preventDefault();
             break;
             case 40:
@@ -167,7 +168,8 @@ function AutoComplete(containerID, database) {
             break;
             case 13:
                  // enter
-
+                window.event.returnValue = false;
+                e.preventDefault();
             break;
             case 40:
                 // arrow down
