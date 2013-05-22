@@ -157,35 +157,10 @@ function AutoComplete(containerID, database) {
 			break;
 			default:
 				// nay other key
-			break;
-		}
-	}
-	autoInput.onkeyup = function(e) {
-		var code = thisClass.keyCode(e);
-		switch(code) {
-			case 9:
-				 // tab
-			break;
-			case 13:
-				 // enter
-				window.event.returnValue = false;
-				e.preventDefault();
-			break;
-			case 40:
-				// arrow down
-				
-			break;
-			case 38:
-				// arrow up
-			   
-			break;
-			default:
-				// nay other key
-				thisClass.show();
+                thisClass.show();
 				autoContent.innerHTML = thisClass.getContent(autoInput.value);
 				thisClass.activeContent(0);
 			break;
 		}
 	}
-	
 }
