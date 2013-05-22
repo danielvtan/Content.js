@@ -15,9 +15,6 @@ function Require(){
 	var classes = []
 	var thisClass = this;
 	this.baseURL = "";
-	
-	
-	console.log(this);
 	/** load a script
 		@param {String} classCall - url of the js file
 	*/
