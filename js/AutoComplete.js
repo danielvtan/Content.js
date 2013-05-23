@@ -138,8 +138,11 @@ function AutoComplete(containerID, database) {
 				 // enter
 				thisClass.selectContent(thisClass.getCurrentActive());
 				thisClass.dispatchEvent(ContentEvent.CONTENT_SELECT, thisClass.getList()[thisClass.getCurrentActive()]);
-				window.event.returnValue = false;
-				e.preventDefault();
+				
+                if(e)
+                    e.preventDefault();
+                else
+                    window.event.returnValue = false;
 			break;
 			case 40:
 				// arrow down
