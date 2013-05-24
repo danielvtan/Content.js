@@ -12,26 +12,36 @@
 */
 var Require = new Require();
 function Require(){
-	var classes = []
+	var classes = [];
 	var thisClass = this;
 	this.baseURL = "";
-	/** load a script
-		@param {String} classCall - url of the js file
-	*/
+
+    this.css = function(classCall) {
+        if(classes.indexOf(classCall) == -1)
+            classes.push(classCall);
+        cssDependencies(classCall);
+    }
 	this.script = function(classCall){
 		if(classes.indexOf(classCall) == -1)
 			classes.push(classCall);
 		scriptDependencies(classCall);
 	}
+    function cssDependencies(classCall) {
+        var css = document.createElement("link");
+        css.rel = "stylesheet";
+		css.type = "text/css";
+        append(css, "href", thisClass.baseURL + classCall);
+    }
 	function scriptDependencies(classCall){
 		var script = document.createElement("script");
-		script.src = thisClass.baseURL + classCall;
 		script.type = "text/javascript";
-		//script.defer = true;
-		//script.id = "scriptID";
-		var head = document.getElementsByTagName("head").item(0);
-		head.appendChild(script)
+        append(script, "src", thisClass.baseURL + classCall);
 	}
+    function append(key, url) {
+        dom[key] = url;
+		var head = document.getElementsByTagName("head").item(0);
+		head.appendChild(dom);
+    }
 }
 // if Array.prototype.indexOf is not supported
 if (!Array.prototype.indexOf) {
