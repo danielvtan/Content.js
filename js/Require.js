@@ -37,7 +37,7 @@ function Require(){
 		script.type = "text/javascript";
         append(script, "src", thisClass.baseURL + classCall);
 	}
-    function append(key, url) {
+    function append(dom, key, url) {
         dom[key] = url;
 		var head = document.getElementsByTagName("head").item(0);
 		head.appendChild(dom);
