@@ -49,7 +49,7 @@ function Dom() {
 		// returns an object with functions
 		Dom.el(".test-class DIV") // get element by class and tag
 	*/
-	this.el = function(id) {
+	this.el = function(id, parents) {
 		var d;
 		var ids = id.split(" ");
 		var loopCount = 0;
@@ -80,7 +80,7 @@ function Dom() {
 				loopSearch(ids[loopCount], d._dom());
 			}
 		}
-		loopSearch(ids[0]);
+		loopSearch(ids[0], parents);
 		return d;
 	}
 	/** add a class to an element
