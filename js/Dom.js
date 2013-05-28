@@ -165,7 +165,7 @@ function Dom() {
 		}
 		var data = {
 			_dom:function() {
-				return list;
+				return list.length == 1 ? list[0] : list;
 			},
 			css:function(css) {
 				for(var i = 0; i < list.length; ++i) {
@@ -205,7 +205,7 @@ function Dom() {
 		}
 		var data = {
 			_dom:function() {
-				return list;
+				return list.length == 1 ? list[0] : list;
 			},
 			css:function(css) {
 				for(var i = 0; i < list.length; ++i) {
