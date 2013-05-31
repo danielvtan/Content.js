@@ -40,7 +40,7 @@ if(window.EventDispatcher == null) {
 	@param {String} builderID - id of dom container
 	@param {Array} database - array of object
 */
-function Content(builderID, database) {
+function Content(builderID, database, dynamicLoad) {
 	Content.prototype = EventDispatcher;
 	Content.prototype.constructor = Content;
 	
@@ -52,7 +52,10 @@ function Content(builderID, database) {
 	var list = [];
 	var db = [];
 	var id = (builderID) ? builderID : "content-item";
-	
+
+    var dynamic = dynamicLoad ? dynamicLoad : false;
+    
+    var dbURL = "";
 	
 	var currentSelected = 0;
 	var currentActive = 0;
@@ -94,12 +97,30 @@ function Content(builderID, database) {
 	this.getBuilderID = function() {
 		return id;
 	}
+    this.isDynamic = function() {
+        return dynamic;
+    }
 	/** set the database
 		@param {Array} database - database to be used
 	*/
 	this.setDB = function(database) {
-		db = database;
+        if(typeof database == "string") {
+            dbURL = database;
+            Ajaxer.get(dbURL, function(e){
+                            db = eval(e);
+                       });
+        } else {
+            db = database;
+        }
+		
 	}
+    /** get db
+        returns database
+    */
+    this.getDb = function() {
+        return db;
+    }
+    this.setDB(database);
 	/** set the design template
 		@param {String} d - design template
 	*/
@@ -187,9 +208,7 @@ function Content(builderID, database) {
 		currentActive = 0;
 		
 		tempDB = tempDB ? tempDB: db;
-		
-		
-		
+
 		var dbLength = tempDB.length;
 		var ctr = 0;
 		list = [];
@@ -213,6 +232,17 @@ function Content(builderID, database) {
 		}
 		return list;
 	}
+    /** get filtered html content
+		@param {String} filter - the string to be filtered
+		@param {String} key - the key from the database
+		@param {Function} onFilterCallBack - callback
+	*/
+    this.getExternalContent = function(filter, key, onFilterCallBack) {
+        Ajaxer.get(dbURL + "?" + key + "=" + filter, function(e){
+                console.log(thisClass.getContent(filter, key, eval(e)));
+                onFilterCallBack(thisClass.getContent(filter, key, eval(e)));
+            });
+    }
 	/** get filtered html content
 		@param {String} filter - the string to be filtered
 		@param {String} key - the key from the database
@@ -226,7 +256,8 @@ function Content(builderID, database) {
 		currentActive = 0;
 		
 		tempDB = tempDB ? tempDB: db;
-		
+        db = tempDB;
+        
 		var contents = "<" + this.contentTagCon + " id='" + id + "' class='content-items'>";
 		
 		var dbLength = tempDB.length;
@@ -383,8 +414,6 @@ function Content(builderID, database) {
 				thisClass.dispatchEvent(ContentEvent.CONTENT_HIDE, list);
 			});
 	}
-	
-	this.setDB(database);
 }
 
 

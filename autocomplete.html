@@ -4,6 +4,7 @@
 <head>
     <title>Autocomplete</title>
     <link rel="stylesheet" type="text/css" href="css/autocomplete.css">
+    <script type="text/javascript" src="js/Ajaxer.js"></script>
     <script type="text/javascript" src="js/Require.js"></script>
 </head>
 <body>
@@ -33,7 +34,7 @@
     //Require.baseURL = "http://nwshare.ph/library/content/0.5/";
     Require.script("js/AutoComplete.js");
     window.onload = function() {
-        var auto = new AutoComplete("autoCon", friendDB);
+        var auto = new AutoComplete("autoCon", "http://localhost/content.js/content.js/ajax/ajax.php", true);
         var auto2 = new AutoComplete("autoCon2", friendDB);
         var auto3 = new AutoComplete("autoCon3", friendDB);
     }

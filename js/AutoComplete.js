@@ -24,7 +24,7 @@ if(window.Content == null) {
 	
 	
 */
-function AutoComplete(containerID, database) {
+function AutoComplete(containerID, database, dynamic) {
 	AutoComplete.prototype = Content;
 	AutoComplete.prototype.constructor = AutoComplete;
 	
@@ -67,8 +67,16 @@ function AutoComplete(containerID, database) {
 	this.setBuilderID(containerID + "Content");
 	this.show = function(x, y) {
 		thisClass.showContent();
-		autoContent.innerHTML = thisClass.getContent();
-		thisClass.activeContent(0);
+		if(thisClass.isDynamic()) {
+            thisClass.getExternalContent(autoInput.value, "data", function(e) {
+                autoContent.innerHTML = e;
+                thisClass.activeContent(0);
+            });
+        } else {
+            autoContent.innerHTML = thisClass.getContent(autoInput.value);
+            thisClass.activeContent(0);
+        }
+		
 		if(x != null)
 			con.style.left = x + "px";
 		if(y != null)
@@ -101,8 +109,17 @@ function AutoComplete(containerID, database) {
 	
 	*/
 	this.reload = function() {
-		autoContent.innerHTML = thisClass.getContent(autoInput.value);
-		thisClass.activeContent(0);
+		if(thisClass.isDynamic()) {
+            thisClass.getExternalContent(autoInput.value, "data", function(e) {
+                thisClass.showContent();
+                autoContent.innerHTML = e;
+                thisClass.activeContent(0);
+            });
+        } else {
+            thisClass.showContent();
+            autoContent.innerHTML = thisClass.getContent(autoInput.value);
+            thisClass.activeContent(0);
+        }
 	}
 	thisClass.addListener(ContentEvent.CONTENT_SHOW, function(e) {
 		autoContent.style.display = "block";
@@ -127,6 +144,54 @@ function AutoComplete(containerID, database) {
 			 thisClass.hide();
 		}, 150);
 	}
+    autoInput.onkeyup = function(e) {
+        var code = thisClass.keyCode(e);
+		switch(code) {
+			case 9:
+				 // tab
+				//thisClass.hideContent();
+			break;
+			case 13:
+				 // enter
+				//thisClass.selectContent(thisClass.getCurrentActive());
+				//thisClass.dispatchEvent(ContentEvent.CONTENT_SELECT, thisClass.getList()[thisClass.getCurrentActive()]);
+				
+                //if(e)
+               //     e.preventDefault();
+                //else
+                //    window.event.returnValue = false;
+			break;
+			case 40:
+				// arrow down
+				//if(thisClass.getCurrentActive() >= thisClass.getList().length - 1)
+				//	thisClass.activeContent(0);
+				//else
+				//	thisClass.activeContent(thisClass.getCurrentActive() + 1);
+			break;
+			case 38:
+				// arrow up
+				//if(thisClass.getCurrentActive() <= 0)
+				//	thisClass.activeContent(thisClass.getList().length - 1);
+				//else
+				//	thisClass.activeContent(thisClass.getCurrentActive() - 1);
+			break;
+			default:
+				// nay other key
+                
+                if(thisClass.isDynamic()) {
+                    thisClass.getExternalContent(autoInput.value, "data", function(e) {
+                        thisClass.showContent();
+                        autoContent.innerHTML = e;
+                        thisClass.activeContent(0);
+                    });
+                } else {
+                    thisClass.showContent();
+                    autoContent.innerHTML = thisClass.getContent(autoInput.value);
+                    thisClass.activeContent(0);
+                }
+			break;
+		}
+    }
 	autoInput.onkeydown = function(e) {
 		var code = thisClass.keyCode(e);
 		switch(code) {
@@ -160,9 +225,6 @@ function AutoComplete(containerID, database) {
 			break;
 			default:
 				// nay other key
-                thisClass.show();
-				autoContent.innerHTML = thisClass.getContent(autoInput.value);
-				thisClass.activeContent(0);
 			break;
 		}
 	}

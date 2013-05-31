@@ -88,12 +88,7 @@ function Dom() {
 		@param {String} className - name of the class
 	*/
 	this.addClass = function(target, className) {
-		var newClass;
-		if(target.className == "") {
-			newClass = className;
-		} else {
-			newClass = target.className + " " + className;   
-		}
+		var newClass = (target.className == "") ? className : target.className + " " + className;
 		target.setAttribute("class", newClass);
 		target.setAttribute("className", newClass);
 	}
@@ -121,7 +116,7 @@ function Dom() {
 			},
 			css:function(css) {
 				Css.apply(d, css);
-				return searchID(key);
+				return searchID(id, parent);
 			},
 			set:function(key, val) {
 				if(typeof val == "function") {
@@ -132,7 +127,7 @@ function Dom() {
 					d[key] = val;
 				}
 				
-				return searchID(key);
+				return searchID(id, parent);
 			},
 			animate:function(duration, to, delta) {
 				Animate.to(d, duration, to, delta);
@@ -171,7 +166,7 @@ function Dom() {
 				for(var i = 0; i < list.length; ++i) {
 					Css.apply(list[i], css);
 				}
-				return searchClass(id);
+				return searchClass(id, parent);
 			},
 			set:function(key, val) {
 				for(var i = 0; i < list.length; ++i) {
@@ -183,7 +178,7 @@ function Dom() {
 						list[i][key] = val;
 					}
 				}
-				return searchClass(id);
+				return searchClass(id, parent);
 			},
 			animate:function(duration, to, delta) {
 				for(var i = 0; i < list.length; ++i) {
@@ -211,7 +206,7 @@ function Dom() {
 				for(var i = 0; i < list.length; ++i) {
 					Css.apply(list[i], css);
 				}
-				return searchTag(tag);
+				return searchTag(tag, parents);
 			},
 			set:function(key, val) {
 				for(var i = 0; i < list.length; ++i) {
@@ -223,7 +218,7 @@ function Dom() {
 						list[i][key] = val;
 					}
 				}
-				return searchTag(tag);
+				return searchTag(tag, parents);
 			},
 			animate:function(duration, to, delta) {
 				for(var i = 0; i < list.length; ++i) {
