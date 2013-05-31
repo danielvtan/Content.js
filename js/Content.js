@@ -38,7 +38,8 @@ if(window.EventDispatcher == null) {
 	@requires Dom 
 	
 	@param {String} builderID - id of dom container
-	@param {Array} database - array of object
+	@param {Array/String} database - array of object/ url of the file to load
+    @param {Boolean} dynamicLoad - set only if the database is external
 */
 function Content(builderID, database, dynamicLoad) {
 	Content.prototype = EventDispatcher;

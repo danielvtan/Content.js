@@ -20,8 +20,8 @@ if(window.Content == null) {
 	@constructor
 	@augments Content
 	@param {string} containerID - id of dom container
-	@param {object} database - object of data
-	
+	@param {Array/String} database - array of object/ url of the file to load
+    @param {Boolean} dynamicLoad - set only if the database is external
 	
 */
 function AutoComplete(containerID, database, dynamic) {
