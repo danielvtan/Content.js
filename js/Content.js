@@ -240,7 +240,6 @@ function Content(builderID, database, dynamicLoad) {
 	*/
     this.getExternalContent = function(filter, key, onFilterCallBack) {
         Ajaxer.get(dbURL + "?" + key + "=" + filter, function(e){
-                console.log(thisClass.getContent(filter, key, eval(e)));
                 onFilterCallBack(thisClass.getContent(filter, key, eval(e)));
             });
     }
