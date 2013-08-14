@@ -1,31 +1,28 @@
-/**
-	@file Dom
-	<a href="../test.html">Demo</a>
-	@author Daniel Tan
-	@example
-	// returns div element with an id of testID
-	Dom.create("div", testID);
-*/
-
-/** By default Dom is already instantiated
-	@constructor
+/** Class: Dom
+    creates a new instance of Dom. By default Dom is already instantiated
 */
 function Dom() {
 	var doc = document;
-	/** list of tags
-		@property {String} DIV - "DIV"
-		@property {String} INPUT - "INPUT"
-	*/
 	this.type = {
 		DIV:"DIV",
 		INPUT:"INPUT",
 		UL:"UL",
 		LI:"LI"
 	};
-	/** creates a dom element
-		@param {String} type - name of element
-		@param {String} id - id of element
-		@returns a dom element
+	/** Function: create
+        creates a dom element
+        
+		Parameters:
+        type - name of element
+		id - id of element
+        
+		Returns:
+        a dom element
+        
+        (start code)
+        // returns div element with an id of testID
+        Dom.create("div", testID);
+        (end)
 	*/
 	this.create = function(type, id) {
 		var e = doc.createElement(type);
@@ -33,11 +30,16 @@ function Dom() {
 				e.id = id;
 		return e;
 	}
-	/** use to get the element by using its id, tag or class
-		@param {String} id - can be id, tag or class
-		@returns an element or mulitiple element
+	/** Function: el
+        use to get the element by using its id, tag or class
 		
-		@example
+        Parameters:
+        id - can be id, tag or class
+		
+        Returns:
+        an element or mulitiple element
+		
+		(start code)
 		// returns a normal dom element
 		Dom.el("testID") // get element by id
 		// returns an object with functions
@@ -48,6 +50,7 @@ function Dom() {
 		Dom.el("DIV") // get element by tag
 		// returns an object with functions
 		Dom.el(".test-class DIV") // get element by class and tag
+        (end)
 	*/
 	this.el = function(id, parents) {
 		var d;
@@ -83,18 +86,29 @@ function Dom() {
 		loopSearch(ids[0], parents);
 		return d;
 	}
-	/** add a class to an element
-		@param {dom} target - dom target
-		@param {String} className - name of the class
+	/** Function: addClass
+        add a class to an element
+        
+        Parameters:
+        target - dom target
+		className - name of the class
+        
+        See Also:
+        <removeClass>
 	*/
 	this.addClass = function(target, className) {
 		var newClass = (target.className == "") ? className : target.className + " " + className;
-		target.setAttribute("class", newClass);
-		target.setAttribute("className", newClass);
+		target.className = newClass;
 	}
-	/** remove a class to an element
-		@param {dom} target - dom target
-		@param {String} className - name of the class
+	/** Function: removeClass
+        remove a class to an element
+        
+        Parameters:
+		target - dom target
+		className - name of the class
+        
+        See Also:
+        <addClass>
 	*/
 	this.removeClass = function(target, className) {
 		var classNames = target.className.split(" ");
@@ -233,25 +247,35 @@ function Dom() {
 }
 window.Dom = new Dom();
 
-/** By default Css is already instantiated
-	@constructor
-	@example
-	// returns apply the css object rules
-	Css.apply(dom, { width:"100px"});
+/** Class: Css
+    creates a new instance of Css. By default Css is already instantiated
 */
 function Css() {
 	var rules = {};
-	/** save a rule object
-		@param {String} name - name/class rule
-		@param {Object} css - rule object
+	/** Function: rule
+        save a rule object
+        
+        Parameters:
+		name - name/class rule
+		css - rule object
+        
+        (start code)
+        // returns apply the css object rules
+        Css.apply(dom, { width:"100px"});
+        (end)
 	*/
 	this.rule = function(name, css) {
 			rules[name] = css;
 	}
-	/** apply a rule/css object
-		@param {dom} dom - dom element
-		@param {Object} css - rule object
-		@returns the dom element
+	/** Function: apply
+        apply a rule/css object
+		
+        Parameters: 
+        dom - dom element
+		css - rule object
+		
+        Returns:
+        the dom element
 	*/
 	this.apply = function(dom, css) {
 				if(rules[css])
@@ -263,3 +287,8 @@ function Css() {
 		}
 }
 window.Css = new Css();
+
+// if Array.prototype.indexOf is not supported
+if (!Array.prototype.indexOf) {
+	Array.prototype.indexOf=function(o,i){for(var j=this.length,i=i<0?i+j<0?0:i+j:i||0;i<j&&this[i]!==o;i++);return j<=i?-1:i}
+}

@@ -1,28 +1,21 @@
-/**
-	@file AutoComplete
-	<a href="../autocomplete.html">Demo 1</a>
-	<a href="../autocomplete-fb.html">Demo 2</a>
-	<a href="../autocomplete-fb2.html">Demo 3</a>
-	<a href="../autocomplete.html">Demo 4</a>
-	<a href="../test.html">Demo 5</a>
-	@author Daniel Tan
-	@example
-	// returns an instance of AutoComplete class
-	var auto = new AutoComplete("autoCon", friendDB);
-*/
-
-
 if(window.Content == null) {
 	console.log("AutoComplete.js requires Content.js");
 	Require.script("js/Content.js");
 }
-/** 
-	@constructor
-	@augments Content
-	@param {string} containerID - id of dom container
-	@param {Array/String} database - array of object/ url of the file to load
-    @param {Boolean} dynamicLoad - set only if the database is external
-	
+/** Class: AutoComplete
+    creates a new instance AutoComplete. Extends <Content>
+    
+    (start code)
+	// returns an instance of AutoComplete class
+	var auto = new AutoComplete("autoCon", friendDB);
+    (end)
+    
+    Parameters:
+	containerID - *[string]* id of dom container
+	database - *[array] optional* array of object/ url of the file to load
+    dynamicLoad  - *[string] optional* set only if the database is external
+    
+    
 */
 function AutoComplete(containerID, database, dynamic) {
 	AutoComplete.prototype = Content;
@@ -65,6 +58,23 @@ function AutoComplete(containerID, database, dynamic) {
 	
 	this.setDesign('<span>${data}</span>');
 	this.setBuilderID(containerID + "Content");
+    /**
+        variable bool: autoHide
+        when set to true content will close when user select an item
+    */
+	this.autoHide = true;
+	this.autoFill = true;
+	this.autoSetOver = false;
+	
+    
+    /** Function: show
+        show the input field and content
+        
+        Parameters:
+        x - *[int/string] optional* x position
+        y - *[int/string] optional* y position
+    
+    */
 	this.show = function(x, y) {
 		thisClass.showContent();
 		if(thisClass.isDynamic()) {
@@ -83,29 +93,31 @@ function AutoComplete(containerID, database, dynamic) {
 			con.style.top = y + "px";
 	}
 	
-	this.autoHide = true;
-	this.autoFill = true;
-	this.autoSetOver = false;
-	
-	/** hides the autocontent dom element
+	/** FunctionL hide
+        hides the autocontent dom element
 	*/
 	this.hide = function() {
 		thisClass.hideContent();
 		autoContent.style.display = "none";
 	}
-	/** clears the input field
+	/** Function: clear
+        clears the input field
 		
 	*/
 	this.clear = function() {
 		thisClass.getInput().value = "";
 	}
-	/** get the input field
-		@returns the input field
+	/** Function: getInput
+        get the input field
+		
+        Returns:
+        the input field
 	*/
 	this.getInput = function() {
 		return autoInput;
 	}
-	/** force reload the content displayed
+	/** Function: reload
+        force reload the content displayed
 	
 	*/
 	this.reload = function() {

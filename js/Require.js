@@ -1,14 +1,15 @@
-/**
-	@file Require
-	<a href="../test.html">Demo</a>
-	@author Daniel Tan
-	@example
-	// load an external javascript file
-	Require.script("js/YourFile.js");
-*/
 
-/** By default Require is already instantiated
-	@constructor
+
+/** Class: Require
+    By default Require is already instantiated
+	
+    (start code)
+    // load an external javascript file
+	Require.script("js/YourFile.js");
+    
+    // load an external css file
+	Require.css("css/mainstyle.css");
+    (end)
 */
 var Require = new Require();
 function Require(){
