@@ -1,19 +1,21 @@
 if(window.Animate == null) {
     console.log("Slide.js requires Animate.js");
-    Require.script("js/Animate.js");
+    if(window.Require)
+        Require.script("Animate.js");
 }
-if(window.Dom == null) {
+if(window.Selector == null) {
     console.log("Slide.js requires Content.js");
-    Require.script("js/Content.js");
+    if(window.Require)
+        Require.script("Content.js");
 }
 function Slide(container, sliderData, width) {
-    Dom.el(container).innerHTML = '<div id="' + container + 'Slide"></div>' + 
+    el(container).innerHTML = '<div id="' + container + 'Slide"></div>' + 
                                 '<div id="' + container + 'Thumb"></div>' +
                                 '<br />' +
                                 '<div id="' + container + 'Left" >left</div>' +
                                 '<div id="' + container + 'Right" >right</div>';
-    var sliderLeft = Dom.el(container + "Left");
-    var sliderRight = Dom.el(container + "Right");
+    var sliderLeft = el(container + "Left");
+    var sliderRight = el(container + "Right");
     
     var slider = new Content("slider");
     slider.setDB(sliderData);
@@ -50,9 +52,9 @@ function Slide(container, sliderData, width) {
         slider.selectContent(e);
         sliderThumb.selectContent(e);
         
-        var content = Dom.el(slider.getBuilderID());
+        var content = el(slider.getBuilderID());
         
-        Animate.to(Dom.el(slider.getBuilderID()), 1000, { left:slider.getCurrentSelected() * width * -1 }, Animate.ELASTIC_OUT);
+        Animate.to(el(slider.getBuilderID()), 1000, { left:slider.getCurrentSelected() * width * -1 }, Animate.ELASTIC_OUT);
         
         initSlide();
     }
@@ -67,9 +69,9 @@ function Slide(container, sliderData, width) {
     }
     
     
-    Dom.el(container + "Slide").innerHTML += slider.getContent();
-    Dom.el(container + "Thumb").innerHTML += sliderThumb.getContent();
-    Dom.el("slider").style.width = slider.getList().length * width + "px";
+    el(container + "Slide").innerHTML += slider.getContent();
+    el(container + "Thumb").innerHTML += sliderThumb.getContent();
+    el("slider").style.width = slider.getList().length * width + "px";
     
     
     sliderLeft.onclick = function() {

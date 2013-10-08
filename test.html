@@ -7,12 +7,12 @@
     <link rel="stylesheet" type="text/css" href="css/content.css">
     <link rel="stylesheet" type="text/css" href="css/autocomplete.css">
     
-    <script type="text/javascript" src="js/Animate.js"></script>
-    <script type="text/javascript" src="js/Dom.js"></script>
-    <script type="text/javascript" src="js/EventDispatcher.js"></script>
-    <script type="text/javascript" src="js/Content.js"></script>
-    <script type="text/javascript" src="js/AutoComplete.js"></script>
-    <script type="text/javascript" src="js/Slide.js" ></script>
+    <script type="text/javascript" src="js/utils/Animate.js"></script>
+    <script type="text/javascript" src="js/utils/Selector.js"></script>
+    <script type="text/javascript" src="js/utils/EventDispatcher.js"></script>
+    <script type="text/javascript" src="js/utils/Content.js"></script>
+    <script type="text/javascript" src="js/utils/AutoComplete.js"></script>
+    <script type="text/javascript" src="js/utils/Slide.js" ></script>
 </head>
 <body>
 <p>
@@ -47,14 +47,14 @@
     content.setDB(friendDB);
     content.addListener(ContentEvent.CONTENT_SELECT, onContentSelect);
     //auto.selectEnabled = false;
-    Dom.el("contentCon").innerHTML = content.getContent();
+    el("contentCon").innerHTML = content.getContent();
     function onContentClick(e) {
        //content.hideContent();
     }
     function onContentSelect(e) {
         alert("onContentSelect");
-        Dom.el("fbidHolder").innerHTML = e.image;
-        Dom.el("dataHolder").innerHTML = e.data;
+        el("fbidHolder").innerHTML = e.image;
+        el("dataHolder").innerHTML = e.data;
     }
 </script>
     

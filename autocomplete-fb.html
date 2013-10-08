@@ -4,8 +4,7 @@
 <head>
     <title>Facebook sample</title>
     <link rel="stylesheet" type="text/css" href="css/autocomplete-fb.css">
-    <script type="text/javascript" src="js/Require.js"></script>
-    <script type="text/javascript" src="js/AutoComplete.js"></script>
+    <script type="text/javascript" src="js/utils/Require.js"></script>
 </head>
 <body>
 <div id="bgContent">
@@ -14,6 +13,9 @@
 </div>
 <div id="tagFriendsList"></div>
 <script type="text/javascript">
+    Require.scriptURL = "js/utils/";
+    Require.script("AutoComplete.js");
+    
     var friendDB = [{ fbid:"4", data:"dan", class:"not-selected"},
                 { fbid:"5", data:"daniel", class:"not-selected"},
                 { fbid:"6", data:"tan", class:"not-selected"},
@@ -36,14 +38,14 @@
             ac.clear();
         });
         
-        Dom.el("bgContent").onclick = function(e){
+        el("bgContent").onclick = function(e){
             var mouse = ac.mouse(e);
             ac.show(mouse.x, mouse.y);
         };
         function saveFriendData(e) {
-            Dom.el("tagFriendsList").innerHTML += addTags(e);
+            el("tagFriendsList").innerHTML += addTags(e);
             if(names.length >= 5) {
-                Dom.el("autoTag").style.display = "none";
+                el("autoTag").style.display = "none";
                 return;
             }
         }

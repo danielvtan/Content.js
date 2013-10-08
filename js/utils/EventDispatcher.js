@@ -87,7 +87,7 @@ function EventDispatcher() {
 	function checkLive() {
 		for(var i = 0; i < thisClass.liveListener.length; ++i) {
 			var live = thisClass.liveListener[i];
-			if(Dom.el(live.id)) {
+			if(document.getElementById(live.id)) {
 				live.func();
 				thisClass.removeLiveListener(live);
 			}

@@ -3,8 +3,7 @@
 <html>
 <head>
     <title>Autocomplete</title>
-    <script type="text/javascript" src="js/Ajaxer.js"></script>
-    <script type="text/javascript" src="js/Require.js"></script>
+    <script type="text/javascript" src="js/utils/Require.js"></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -30,10 +29,11 @@
     <input type="submit">
 </form>
 <script type="text/javascript">
-    //Require.baseURL = "http://nwshare.ph/library/content/0.5/";
-    Require.css("css/autocomplete.css");
-    Require.script("js/Ajaxer.js");
-    Require.script("js/AutoComplete.js");
+    Require.scriptURL = "js/utils/";
+    Require.css("autocomplete.css");
+    Require.script("Ajaxer.js");
+    Require.script("AutoComplete.js");
+    
     window.onload = function() {
         var auto = new AutoComplete("autoCon", "ajax/ajax.php", true);
         var auto2 = new AutoComplete("autoCon2", friendDB);

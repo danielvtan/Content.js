@@ -15,8 +15,8 @@ var Require = new Require();
 function Require(){
 	var classes = [];
 	var thisClass = this;
-	this.baseURL = "";
-
+	this.scriptURL = "js/";
+    this.cssURL = "css/";
     this.css = function(classCall) {
         if(classes.indexOf(classCall) == -1)
             classes.push(classCall);
@@ -31,12 +31,12 @@ function Require(){
         var css = document.createElement("link");
         css.rel = "stylesheet";
 		css.type = "text/css";
-        append(css, "href", thisClass.baseURL + classCall);
+        append(css, "href", thisClass.cssURL + classCall);
     }
 	function scriptDependencies(classCall){
 		var script = document.createElement("script");
 		script.type = "text/javascript";
-        append(script, "src", thisClass.baseURL + classCall);
+        append(script, "src", thisClass.scriptURL + classCall);
 	}
     function append(dom, key, url) {
         dom[key] = url;

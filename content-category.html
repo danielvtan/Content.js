@@ -1,11 +1,11 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="css/category.css">
-    <script type="text/javascript" src="js/Require.js" ></script>
-    <script type="text/javascript" src="js/Content.js" ></script>
+    <script type="text/javascript" src="js/utils/Require.js" ></script>
     
     <script type="text/javascript" >
-    
+        Require.scriptURL = "js/utils/";
+        Require.script("Content.js");
         window.onload = function() {
             var list = [
                         {category:"dog", name:"puti"},
@@ -40,19 +40,19 @@
                         ];
             var category = new Content("list", list);
             category.setDesign('<span class="${category}">${name}</span>');
-            Dom.el("listCon").innerHTML = category.getContent();
+            el("listCon").innerHTML = category.getContent();
             
-            Dom.el("dogBtn").onclick = function() {
+            el("dogBtn").onclick = function() {
                 selectPet("dog");
             }
-            Dom.el("catBtn").onclick = function() {
+            el("catBtn").onclick = function() {
                 selectPet("cat");
             }
-            Dom.el("fishBtn").onclick = function() {
+            el("fishBtn").onclick = function() {
                 selectPet("fish");
             }
             function selectPet(type) {
-                Dom.el("listCon").innerHTML = category.getContent(type, "category");
+                el("listCon").innerHTML = category.getContent(type, "category");
             }
             selectPet("dog");
             
