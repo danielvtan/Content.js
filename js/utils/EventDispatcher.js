@@ -17,35 +17,32 @@
     (end)
 */
 function EventDispatcher() {
-	/** this reference */
+    /** this reference */
 	var thisClass = this;
-	/** check if the browser is IE
+    /** check if the browser is IE
 		@type {Boolean}
 	*/
 	this.isIE = (navigator.appName == 'Microsoft Internet Explorer') ? true: false;
-	/** set defaultTarget
+    /** set defaultTarget
 		@type {dom}	
 	*/
-	this.defaultTarget = window;
-	/** list of event listeners
+	this.defaultTarget;
+    /** list of event listeners
 		@type {Object}
 		@protected
 	*/
 	this.listeners = {};
-	/** list of liveListeners
+    /** list of liveListeners
 		@type {Array}
 		@protected
 	*/
 	this.liveListener = [];
-	
-	var eventInterval;
-	
-	/** use to get cross browser mouse x and y position
+    /** use to get cross browser mouse x and y position
 		@param {Object} e - event object from mouse events
 		@returns Object x and y
 	*/
 	this.mouse = function(e){
-		var mouse = new Object();
+		var mouse = {};
 		
 		if(e){
 			if(e.custom){
@@ -75,14 +72,17 @@ function EventDispatcher() {
 		}
 		return mouse;
 	}
-	/** add a live listener
+    /** add a live listener
 		@param {String} id - any unique string
 		@param {Function} func - callback function
 	*/
 	this.addLiveListener = function(id, func) {
-		thisClass.liveListener.push({id:id, func:func});
+        var eventInterval;
+        var live = {id:id, func:func, eventInterval:eventInterval };
+		thisClass.liveListener.push(live);
 		if(thisClass.liveListener.length > 0)
 			eventInterval = setInterval(function(){ checkLive() }, 50);
+        return live;
 	}
 	function checkLive() {
 		for(var i = 0; i < thisClass.liveListener.length; ++i) {
@@ -93,23 +93,24 @@ function EventDispatcher() {
 			}
 		}
 	}
-	/** remove a live listener
+    /** remove a live listener
 		@param {Object} live - object that was added
 	*/
 	this.removeLiveListener = function(live) {
+        var eventInterval = live.eventInterval;
 		var index = thisClass.liveListener.indexOf(live);
 		thisClass.liveListener.splice(index, 1);
 		if(thisClass.liveListener.length <= 0)
 			clearInterval(eventInterval);
 	}
-	/** use to get crossbrowser keyCode
+    /** use to get crossbrowser keyCode
 		@param {Object} e - event object from keyboard events
 		@returns keyCode
 	*/
 	this.keyCode = function(e) {
 		return (e != undefined) ? e.keyCode : window.event.keyCode;
 	}
-	/** use to dispatch events
+    /** use to dispatch events
 		@param {String} type - string that was used when adding the event listener
 		@param {Object} e - data to pass
 		@protected
@@ -121,7 +122,7 @@ function EventDispatcher() {
 			thisClass.listeners[type][i](e);
 		}
 	}
-	/** use to add event listener
+    /** use to add event listener
 		@param {String} type - any unique string
 		@param {Function} listener - callback function
 		@param {dom} target - dom element
@@ -130,18 +131,18 @@ function EventDispatcher() {
 		if(thisClass.listeners[type] == undefined) 
 			thisClass.listeners[type] = [];
 		thisClass.listeners[type].push(listener);
-		
-		var t = (target != null) ? target : thisClass.defaultTarget;
-		if(t[type] == undefined)
-			return;
+        
+		var t = target ? target : thisClass.defaultTarget;
+        
+		if(!t || t[type] === undefined)
+            return;
+        if(t == window)
+            console.log("Caution: adding " + type + " event on ->" + window);
 		t[type] = function(e){
-			if(t != thisClass.defaultTarget)
-				t.dispatchEvent(type, e);
-			else
-				thisClass.dispatchEvent(type, e);
+            thisClass.dispatchEvent(type, e);
 		};
 	}
-	/** use to remove event listener
+    /** use to remove event listener
 		@param {String} type - string that was used when adding the event listener
 		@param {Function} listener - callback function
 		@param {dom} - null
@@ -149,40 +150,6 @@ function EventDispatcher() {
 	this.removeListener = function(type, listener, target){
 		var index = thisClass.listeners[type].indexOf(listener);
 		thisClass.listeners[type].splice(index, 1);
-	}
-	/** converts an object to string
-		@param {Object} o - an object
-		@returns Object
-	*/
-	this.objectToString = function(o) {
-		var parse = function(_o){
-			var a = [], t;
-			for(var p in _o){
-			if(_o.hasOwnProperty(p)){
-				t = _o[p];
-				if(t && typeof t == "object"){
-				a[a.length]= p + ":{ " + arguments.callee(t).join(", ") + "}";
-				}
-				else {
-				if(typeof t == "string"){
-					a[a.length] = [ p+ ": '" + t.toString() + "'" ];
-				}
-				else{
-					a[a.length] = [ p+ ": " + t.toString()];
-				}
-				}
-			}
-			}
-			return a;
-		}
-		return "{" + parse(o).join(", ") + "}";
-	}
+    }
 	
 }
-/** Event: NuEvent
-	LOAD - triggers when browser is loaded completely
-*/
-var NuEvent = {
-			LOAD:"onload"
-
-			};

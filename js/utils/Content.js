@@ -485,6 +485,33 @@ function Content(builderID, database, dynamicLoad) {
 				thisClass.dispatchEvent(ContentEvent.CONTENT_HIDE, list);
 			});
 	}
+    /** converts an object to string
+		@param {Object} o - an object
+		@returns Object
+	*/
+	this.objectToString = function(o) {
+		var parse = function(_o){
+			var a = [], t;
+			for(var p in _o){
+			if(_o.hasOwnProperty(p)){
+				t = _o[p];
+				if(t && typeof t == "object"){
+				a[a.length]= p + ":{ " + arguments.callee(t).join(", ") + "}";
+				}
+				else {
+				if(typeof t == "string"){
+					a[a.length] = [ p+ ": '" + t.toString() + "'" ];
+				}
+				else{
+					a[a.length] = [ p+ ": " + t.toString()];
+				}
+				}
+			}
+			}
+			return a;
+		}
+		return "{" + parse(o).join(", ") + "}";
+	}
 }
 
 /** Event: ContentEvent

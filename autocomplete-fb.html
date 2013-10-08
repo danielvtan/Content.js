@@ -59,8 +59,8 @@
         }
     }
     function addFriend(e) {
-        Dom.el("tagFriendsList").removeChild(Dom.el("tag" + e.id));
-        Dom.el("autoTag").style.display = "block";
+        el("tagFriendsList").removeChild(el("tag" + e.id));
+        el("autoTag").style.display = "block";
         for(var i = 0; i < items.length; ++i) {
             if(items[i].fbid == e.id){
                 ac.addData(items[i]);	
